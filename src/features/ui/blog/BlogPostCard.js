@@ -19,7 +19,15 @@ const StyledCardMedia = styled('div')({
   paddingTop: 'calc(100% * 3 / 4)',
 });
 
-const StyledTitle = styled(Link)({
+const StyledTitle = styled('h3')({
+  height: 44,
+  overflow: 'hidden',
+  WebkitLineClamp: 2,
+  display: '-webkit-box',
+  WebkitBoxOrient: 'vertical',
+});
+
+const StyledDescription = styled('p')({
   height: 44,
   overflow: 'hidden',
   WebkitLineClamp: 2,
@@ -60,7 +68,7 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
+  const { cover, title, description, view, comment, share, author, createdAt } = post;
   // const latestPostLarge = index === 0;
   // const latestPost = index === 1 || index === 2;
   const latestPostLarge = 0;
@@ -73,7 +81,7 @@ export default function BlogPostCard({ post, index }) {
   ];
 
   return (
-    <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
+    <Grid item xs={6} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
@@ -96,32 +104,38 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <SvgColor
-            color="paper"
-            src="/assets/icons/shape-avatar.svg"
-            sx={{
-              width: 80,
-              height: 36,
-              zIndex: 9,
-              bottom: -15,
-              position: 'absolute',
-              color: 'background.paper',
-              ...((latestPostLarge || latestPost) && { display: 'none' }),
-            }}
-          />
-          <StyledAvatar
-            alt={author.name}
-            src={author.avatarUrl}
-            sx={{
-              ...((latestPostLarge || latestPost) && {
-                zIndex: 9,
-                top: 24,
-                left: 24,
-                width: 40,
-                height: 40,
-              }),
-            }}
-          />
+            {author && (
+                <>
+                    <SvgColor
+                        color="paper"
+                        src="/assets/icons/shape-avatar.svg"
+                        sx={{
+                            width: 80,
+                            height: 36,
+                            zIndex: 9,
+                            bottom: -15,
+                            position: 'absolute',
+                            color: 'background.paper',
+                            ...((latestPostLarge || latestPost) && { display: 'none' }),
+                        }}
+                    />
+                    <StyledAvatar
+                        alt={author.name}
+                        src={author.avatarUrl}
+                        sx={{
+                            ...((latestPostLarge || latestPost) && {
+                                zIndex: 9,
+                                top: 24,
+                                left: 24,
+                                width: 40,
+                                height: 40,
+                            }),
+                        }}
+                    />
+                </>
+
+            )}
+
 
           <StyledCover alt={title} src={cover} />
         </StyledCardMedia>
@@ -154,24 +168,44 @@ export default function BlogPostCard({ post, index }) {
             {title}
           </StyledTitle>
 
-          <StyledInfo>
-            {POST_INFO.map((info, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  ml: index === 0 ? 0 : 1.5,
-                  ...((latestPostLarge || latestPost) && {
-                    color: 'grey.500',
-                  }),
-                }}
-              >
-                {info.icon}
-                <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
-              </Box>
-            ))}
-          </StyledInfo>
+          <StyledDescription
+              color="inherit"
+              variant="subtitle2"
+              underline="hover"
+              sx={{
+                ...(latestPostLarge && { typography: 'h5', height: 60 }),
+                ...((latestPostLarge || latestPost) && {
+                  color: 'common.white',
+                }),
+              }}
+          >
+            {description}
+          </StyledDescription>
+
+          { view || comment || share && (
+              <StyledInfo>
+                {POST_INFO.map((info, index) => {
+                  const number = fShortenNumber(info.number)
+                  return !!number.length && (
+                      <Box
+                          key={index}
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            ml: index === 0 ? 0 : 1.5,
+                            ...((latestPostLarge || latestPost) && {
+                              color: 'grey.500',
+                            }),
+                          }}
+                      >
+                        {info.icon}
+                        <Typography variant="caption">{number}</Typography>
+                      </Box>
+                  )
+                })}
+              </StyledInfo>
+          )}
+
         </CardContent>
       </Card>
     </Grid>

@@ -83,4 +83,4 @@ const cocktails = [...Array(23)].map((_, index) => ({
   },
 }));
 
-export default cocktails2;
+export default cocktails;

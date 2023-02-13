@@ -1,9 +1,13 @@
 
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 import {BlogPostCard, BlogPostsSearch, BlogPostsSort} from '@/features/ui/blog';
-
-// mock
-import COCKTAILS from '../_mock/cocktails';
+import {ListCocktail} from "@/features/cocktail";
+import {useEffect} from "react";
+import {useAppDispatch, useAppSelector} from "@/app/hooks";
+import {fetchCocktails} from "@/features/cocktail/CocktailSlice";
+import {IBaseCocktail, ICocktailList} from "@features/cocktail/type";
+import {faker} from "@faker-js/faker";
+import {env} from "@/env";
 
 // ----------------------------------------------------------------------
 
@@ -15,9 +19,37 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function BlogPage() {
+export default function Home() {
+    const dispatch = useAppDispatch()
+    const {listCocktails, error, listStatus} = useAppSelector(state => state.cocktail)
+
+
+    const formatCocktailList = (cocktails: IBaseCocktail[]): ICocktailList[] => {
+        return cocktails?.map((cocktail, index) => ({
+            id: cocktail.id,
+            cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
+            title: cocktail.name,
+            description: cocktail.description,
+        }));
+    }
+
+    const cocktailsList = formatCocktailList(listCocktails)
+
+
+    useEffect(() => {
+        dispatch(fetchCocktails())
+    }, [dispatch])
+
+    if (listStatus === 'failed') {
+        return (
+            <h3>Error: {error}</h3>
+        )
+    }
+
     return (
         <>
+            {/*// TODO: Loading spinner*/}
+
             <Container sx={{ paddingTop: "15px"}}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
@@ -25,16 +57,12 @@ export default function BlogPage() {
                     </Typography>
                 </Stack>
 
-                <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-                    <BlogPostsSearch posts={COCKTAILS} />
-                    <BlogPostsSort options={SORT_OPTIONS} />
-                </Stack>
+                {/*<Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">*/}
+                {/*    <BlogPostsSearch posts={cocktailsList} />*/}
+                {/*    <BlogPostsSort options={SORT_OPTIONS} />*/}
+                {/*</Stack>*/}
 
-                <Grid container spacing={3} mb={5}>
-                    {COCKTAILS.map((post, index) => (
-                        <BlogPostCard key={post.id} post={post} index={index} />
-                    ))}
-                </Grid>
+                <ListCocktail cocktails={cocktailsList} />
                 <Stack direction="row" alignItems="center" justifyContent="flex-end" mb={5}>
                     <Button variant="contained">
                         Manage

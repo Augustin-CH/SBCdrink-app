@@ -1,0 +1,19 @@
+import CocktailForm from "@/features/cocktail/CocktailForm";
+import {FC} from "react";
+
+interface AddCocktailProps {
+}
+
+const AddCocktail: FC<AddCocktailProps> = () => {
+    return (
+        <CocktailForm
+            mode="add"
+            className="add-cocktail"
+            request={() => {}}
+            title="Add cocktail"
+            submitText="Ajouter"
+            notificationSuccess="Cocktail ajouté avec succès"
+            notificationError="Une erreur est survenue lors de l'ajout du cocktail"
+        />
+    );
+}
