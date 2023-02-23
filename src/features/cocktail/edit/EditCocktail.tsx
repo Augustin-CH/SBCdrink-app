@@ -1,24 +1,32 @@
 import CocktailForm from "@/features/cocktail/CocktailForm";
-import {IBaseCocktail} from "@/features/cocktail/type";
 import {FC} from "react";
+import {useAppSelector} from "@/app/hooks";
 
 interface EditCocktailProps {
-    cocktail: IBaseCocktail;
+    isModalOpen: boolean,
+    onCloseModal: () => void,
 }
 
 const EditCocktail: FC<EditCocktailProps> = ({
-    cocktail,
+     isModalOpen,
+     onCloseModal,
 }) => {
+    const {selectedCocktail} = useAppSelector(state => state.cocktail)
+
     return (
         <CocktailForm
             mode="edit"
             className="edit-cocktail"
-            cocktail={cocktail}
+            cocktail={selectedCocktail}
             request={() => {}}
             title="Edit cocktail"
             submitText="Modifier"
             notificationSuccess="Cocktail modifié avec succès"
             notificationError="Une erreur est survenue lors de la modification du cocktail"
+            isModalOpen={isModalOpen}
+            onCloseModal={onCloseModal}
         />
     );
 }
+
+export default EditCocktail;

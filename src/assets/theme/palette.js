@@ -83,7 +83,8 @@ const palette = {
   text: {
     primary: GREY[800],
     secondary: GREY[600],
-    disabled: GREY[500],
+    // disabled: GREY[500],
+    disabled: 'black',
   },
   background: {
     paper: '#fff',

@@ -1,20 +1,20 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import {Box, Button, Modal, TextField, Typography} from "@mui/material";
-import {FC, useState} from "react";
-import {IBaseCocktail} from "@features/cocktail/type";
-import {useAppDispatch, useAppSelector} from "@app/hooks";
-import {RootState} from "@app/store";
-import {FetchStatus} from "@app/shared/types";
+import {Box, Button, Grid, Modal, Paper, Slider, Stack, TextField, Typography} from "@mui/material";
+import {FC, useEffect, useState} from "react";
+import {IBaseCocktail} from "@/features/cocktail/type";
+import {useAppDispatch} from "@/app/hooks";
+import {FetchStatus} from "@/app/shared/types";
 import {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
+import {alpha, styled} from "@mui/material/styles";
 
 const validationSchema = yup.object({
 
 });
 
 interface CocktailFormProps {
-    mode: "add" | "edit" | "view";
+    mode: "add" | "edit";
     className?: string;
     cocktail?: IBaseCocktail;
     request: (values: any) => void;
@@ -22,7 +22,21 @@ interface CocktailFormProps {
     submitText: string;
     notificationSuccess: string;
     notificationError: string;
+    isModalOpen: boolean;
+    onCloseModal: () => void;
 }
+
+const BoxModal = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 600,
+    minWidth: 350,
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+    padding: 20,
+}));
 
 const CocktailForm: FC<CocktailFormProps> = ({
      mode,
@@ -33,14 +47,20 @@ const CocktailForm: FC<CocktailFormProps> = ({
      submitText,
      notificationSuccess,
      notificationError,
+     isModalOpen,
+     onCloseModal,
 }) => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        formik.setValues(cocktail || {} as IBaseCocktail)
+    }, [cocktail])
+
 
     const formik = useFormik({
-        initialValues: cocktail || {} as IBaseCocktail,
+        initialValues: {} as IBaseCocktail,
         validationSchema: validationSchema,
         onSubmit: async (values: any) => {
             if (requestStatus === 'idle') {
@@ -73,31 +93,46 @@ const CocktailForm: FC<CocktailFormProps> = ({
     return (
         <Modal
             open={isModalOpen}
-            onClose={setIsModalOpen}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            onClose={onCloseModal}
         >
-            <Box className={className}>
+            <BoxModal>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     {title}
                 </Typography>
                 <form onSubmit={formik.handleSubmit}>
-                    <TextField
-                        fullWidth
-                        id="name"
-                        name="name"
-                        label="Name"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
-                    />
+                    <Grid container mb={5} pt={5}>
+
+                        <TextField
+                            fullWidth
+                            id="name"
+                            name="name"
+                            label="Name"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            error={formik.touched.name && Boolean(formik.errors.name)}
+                            helperText={formik.touched.name && formik.errors.name}
+                        />
+
+                        <TextField
+                            fullWidth
+                            id="description"
+                            name="description"
+                            label="Description"
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
+                            multiline
+                        />
+                    </Grid>
+
+
 
                     <Button color="primary" variant="contained" fullWidth type="submit">
                         {submitText}
                     </Button>
                 </form>
-            </Box>
+            </BoxModal>
         </Modal>
     )
 }

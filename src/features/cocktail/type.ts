@@ -36,3 +36,11 @@ export interface ICocktailList {
     }
     description?: string,
 }
+
+export interface IStepMakeCocktail {
+    stepId: UUID,
+    ingredientId: UUID,
+    quantity: number,
+}
+
+export interface IMakeCocktail extends Array<IStepMakeCocktail>{}

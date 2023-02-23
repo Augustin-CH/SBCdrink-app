@@ -2,9 +2,14 @@ import CocktailForm from "@/features/cocktail/CocktailForm";
 import {FC} from "react";
 
 interface AddCocktailProps {
+    isModalOpen: boolean,
+    onCloseModal: () => void,
 }
 
-const AddCocktail: FC<AddCocktailProps> = () => {
+const AddCocktail: FC<AddCocktailProps> = ({
+    isModalOpen,
+    onCloseModal,
+}) => {
     return (
         <CocktailForm
             mode="add"
@@ -14,6 +19,10 @@ const AddCocktail: FC<AddCocktailProps> = () => {
             submitText="Ajouter"
             notificationSuccess="Cocktail ajouté avec succès"
             notificationError="Une erreur est survenue lors de l'ajout du cocktail"
+            isModalOpen={isModalOpen}
+            onCloseModal={onCloseModal}
         />
     );
 }
+
+export default AddCocktail;

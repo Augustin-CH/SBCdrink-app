@@ -7,7 +7,7 @@ import {fetchCocktails} from "@/features/cocktail/CocktailSlice";
 
 export default function Home() {
     const dispatch = useAppDispatch()
-    const {listCocktails, error, listStatus} = useAppSelector(state => state.cocktail)
+    const {listCocktails, listStatus} = useAppSelector(state => state.cocktail)
 
     useEffect(() => {
         dispatch(fetchCocktails())

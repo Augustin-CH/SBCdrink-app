@@ -69,7 +69,7 @@ BlogPostCard.propTypes = {
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index }) {
+export default function BlogPostCard({ post, index, onClick }) {
   const { cover, title, description, view, comment, share, author, createdAt } = post;
 
   const POST_INFO = [
@@ -79,7 +79,7 @@ export default function BlogPostCard({ post, index }) {
   ];
 
   return (
-    <Grid item xs={6} sm={6} md={3} key={`card_${index}`}>
+    <Grid item xs={6} sm={6} md={3} key={`card_${index}`} onClick={onClick}>
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia>
             {author && (
@@ -125,7 +125,7 @@ export default function BlogPostCard({ post, index }) {
               </StyledDescription>
           )}
 
-          { view || comment || share && (
+          { (view || comment || share) && (
               <StyledInfo>
                 {POST_INFO.map((info, index) => {
                   const number = fShortenNumber(info.number)

@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {FetchStatus, IPaginateParams, UUID} from "@/app/shared/types";
+import {FetchStatus} from "@/app/shared/types";
 import {ApiClient} from "@/lib/http/api"
 import {RootState} from "@/app/store";
 import {
-    IBaseCocktail
+    IBaseCocktail, IMakeCocktail
 } from './type';
 import {env} from "@/env";
 
@@ -30,6 +30,10 @@ export const cocktailSlice = createSlice({
     name: 'cocktail',
     initialState,
     reducers: {
+        setSelectedCocktail(state, action) {
+            console.log(action.payload)
+            state.selectedCocktail = action.payload
+        }
     },
     extraReducers(builder) {
         builder
@@ -52,6 +56,11 @@ export const fetchCocktails = createAsyncThunk<IBaseCocktail[], void, { state: R
     return resp.data;
 })
 
-export const {} = cocktailSlice.actions;
+export const makeCocktail = createAsyncThunk<IMakeCocktail, void, { state: RootState }>('cocktail/makeCocktail', async () => {
+    const resp = await client.get(`${env.REACT_APP_API_URL}/api/make/cocktail`);
+    return resp.data;
+})
+
+export const {setSelectedCocktail} = cocktailSlice.actions;
 
 export default cocktailSlice.reducer;
