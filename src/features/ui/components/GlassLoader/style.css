@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    background-color: #5D504C;
+}
+
+.container-glass-loader {
+    /*width: 75vw;*/
+    /*max-width: 580px;*/
+    /*margin: 0 auto;*/
+}
+
+.bg {
+    fill: #5D504C;
+}
+
+.foam {
+    fill: #fbefdb;
+}
+
+.glass {
+    fill: #fff;
+    opacity: 0.1;
+}
+
+.yellow {
+    fill: #fcb143;
+}
+
+#foam,
+.liquids {
+    clip-path: url(#clip);
+}
+
+#text-svg {
+    fill: rgba(251, 239, 219, 0.7);
+    visibility: hidden;
+}
+
+
+#bubbles,
+#foam_1,
+#foam_2,
+#text-beer {
+    visibility: hidden;
+}
