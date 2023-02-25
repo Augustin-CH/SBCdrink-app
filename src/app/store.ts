@@ -1,10 +1,12 @@
-import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
+import {configureStore, ThunkAction, Action, createAction, AsyncThunk, AnyAction} from '@reduxjs/toolkit';
 import {env} from '@/env';
-import cocktailSlice from "@/features/cocktail/CocktailSlice";
+import cocktailReducer from "@/features/cocktail/CocktailSlice";
+import notificationReducer from "@/features/notification/notificationSlice";
 
 export const store = configureStore({
     reducer: {
-        cocktail: cocktailSlice,
+        cocktail: cocktailReducer,
+        notification: notificationReducer,
     },
     devTools: env.REACT_APP_ENVIRONMENT === "development"
 });
