@@ -38,9 +38,20 @@ export interface ICocktailList {
 }
 
 export interface IStepMakeCocktail {
-    stepId: UUID,
-    ingredientId: UUID,
+    order: number,
+    ingredient: UUID,
     quantity: number,
 }
 
 export interface IMakeCocktail extends Array<IStepMakeCocktail>{}
+
+export interface IRules {
+    glassVolume: number,
+    alcoholLevel: number,
+}
+
+export interface IFormatStepMakeCocktail {
+    rules: IRules,
+    cocktail: IBaseCocktail,
+}
+

@@ -1,9 +1,11 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {FetchStatus} from "@/app/shared/types";
 import {ApiClient} from "@/lib/http/api"
-import {RootState} from "@/app/store";
 import {
-    IBaseCocktail, IMakeCocktail
+    RootState,
+} from "@/app/store";
+import {
+    IBaseCocktail, ICocktailList, IFormatStepMakeCocktail, IMakeCocktail, IRules
 } from './type';
 import {env} from "@/env";
 
@@ -33,10 +35,11 @@ export const cocktailSlice = createSlice({
         setSelectedCocktail(state, action) {
             console.log(action.payload)
             state.selectedCocktail = action.payload
-        }
+        },
     },
     extraReducers(builder) {
         builder
+
             .addCase(fetchCocktails.pending, (state, action) => {
                 state.listStatus = 'loading'
             })
@@ -56,7 +59,31 @@ export const fetchCocktails = createAsyncThunk<IBaseCocktail[], void, { state: R
     return resp.data;
 })
 
-export const makeCocktail = createAsyncThunk<IMakeCocktail, void, { state: RootState }>('cocktail/makeCocktail', async () => {
+export const formatStepMakeCocktail = ({
+    rules,
+    cocktail,
+}: IFormatStepMakeCocktail): IMakeCocktail => {
+    const {glassVolume, alcoholLevel} = rules
+    const {ingredients} = cocktail
+
+    const alcoholVolume = glassVolume * (alcoholLevel / 100)
+    const noAlcoholVolume = glassVolume - alcoholVolume
+
+    const stepCocktails = ingredients.map((ingredient) => {
+        return {
+            order: ingredient.order,
+            ingredient: ingredient.id,
+            quantity: (ingredient.isAlcohol ? alcoholVolume : noAlcoholVolume) * (ingredient.proportion / 100)
+        }
+    })
+
+    return stepCocktails
+}
+
+export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (data) => {
+
+    console.log(data)
+
     const resp = await client.get(`${env.REACT_APP_API_URL}/api/make/cocktail`);
     return resp.data;
 })

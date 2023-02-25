@@ -2,13 +2,16 @@ import CocktailForm from "@/features/cocktail/CocktailForm";
 import {FC, useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "@/app/hooks";
 import {Button, Grid, Modal, Slider, TextField, Typography} from "@mui/material";
-import {Formik, useFormik, useFormikContext} from "formik";
-import {IBaseCocktail} from "@features/cocktail/type";
+import {Formik, FormikHelpers, useFormik, useFormikContext} from "formik";
+import {IBaseCocktail, IMakeCocktail, IRules} from "@/features/cocktail/type";
 import {AxiosError} from "axios";
 import * as yup from "yup";
 import {useNavigate} from "react-router-dom";
-import {FetchStatus} from "@app/shared/types";
+import {FetchStatus} from "@/app/shared/types";
 import {styled} from "@mui/material/styles";
+import {formatStepMakeCocktail, makeCocktail} from "@/features/cocktail/CocktailSlice";
+import {showNotification} from "@/features/notification/notificationSlice";
+import cocktails from "@_mock/cocktails";
 
 const validationSchema = yup.object({
 
@@ -83,10 +86,6 @@ const BoxModal = styled('div')(({ theme }) => ({
     padding: 20,
 }));
 
-type formType = {
-    glassVolume: number,
-    alcoholLevel: number,
-}
 const ViewCocktail: FC<ViewCocktailProps> = ({
     isModalOpen,
     onCloseModal,
@@ -96,28 +95,27 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
     const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
     const {selectedCocktail} = useAppSelector(state => state.cocktail)
 
-    const onSubmit = async (values: any) => {
+    const onSubmit = async (values: IRules, {resetForm}: FormikHelpers<IRules>) => {
         console.log(values)
-        // if (requestStatus === 'idle') {
-        //     try {
-        //         setRequestStatus('loading')
-        //         // @ts-ignore
-        //         await dispatch(request(values)).unwrap()
-        //         onReset()
-        //         // dispatch(showNotification({
-        //         //     ...notificationSuccess,
-        //         //     type: "success"
-        //         // }))
-        //         // mode === "add" && navigate(`/promotions/${values.reference}`)
-        //     } catch (e: AxiosError | any) {
-        //         // dispatch(showNotification({
-        //         //     ...notificationError,
-        //         //     type: "error"
-        //         // }))
-        //     } finally {
-        //         setRequestStatus('idle')
-        //     }
-        // }
+        if (requestStatus === 'idle') {
+            try {
+                setRequestStatus('loading')
+                const stepCocktails = formatStepMakeCocktail({rules: values, cocktail: selectedCocktail})
+                await dispatch(makeCocktail(stepCocktails)).unwrap()
+                resetForm()
+                dispatch(showNotification({
+                    title: "Demande de cocktail envoyée avec succès",
+                    type: "success"
+                }))
+            } catch (e: AxiosError | any) {
+                dispatch(showNotification({
+                    title: "Une erreur est survenue lors de l'envoi de la demande de cocktail",
+                    type: "error",
+                }))
+            } finally {
+                setRequestStatus('idle')
+            }
+        }
     }
 
     return (
@@ -133,7 +131,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                     initialValues={{
                         glassVolume: 25,
                         alcoholLevel: selectedCocktail?.alcoholLevel,
-                    } as formType}
+                    } as IRules}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
