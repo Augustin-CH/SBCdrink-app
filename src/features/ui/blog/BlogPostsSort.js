@@ -1,15 +1,16 @@
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 // @mui
-import { MenuItem, TextField } from '@mui/material';
+import { MenuItem, TextField } from '@mui/material'
 
 // ----------------------------------------------------------------------
 
 BlogPostsSort.propTypes = {
   options: PropTypes.array,
-  onSort: PropTypes.func,
-};
+  onSort: PropTypes.func
+}
 
-export default function BlogPostsSort({ options, onSort }) {
+export default function BlogPostsSort ({ options, onSort }) {
   return (
     <TextField select size="small" value="latest" onChange={onSort}>
       {options.map((option) => (
@@ -18,5 +19,5 @@ export default function BlogPostsSort({ options, onSort }) {
         </MenuItem>
       ))}
     </TextField>
-  );
+  )
 }

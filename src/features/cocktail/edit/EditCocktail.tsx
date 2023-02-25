@@ -1,19 +1,20 @@
-import CocktailForm from "@/features/cocktail/CocktailForm";
-import {FC} from "react";
-import {useAppSelector} from "@/app/hooks";
+import React from 'react'
+import CocktailForm from '@/features/cocktail/CocktailForm'
+import { type FC } from 'react'
+import { useAppSelector } from '@/app/hooks'
 
 interface EditCocktailProps {
-    isModalOpen: boolean,
-    onCloseModal: () => void,
+  isModalOpen: boolean
+  onCloseModal: () => void
 }
 
 const EditCocktail: FC<EditCocktailProps> = ({
-     isModalOpen,
-     onCloseModal,
+  isModalOpen,
+  onCloseModal
 }) => {
-    const {selectedCocktail} = useAppSelector(state => state.cocktail)
+  const { selectedCocktail } = useAppSelector(state => state.cocktail)
 
-    return (
+  return (
         <CocktailForm
             mode="edit"
             className="edit-cocktail"
@@ -26,7 +27,7 @@ const EditCocktail: FC<EditCocktailProps> = ({
             isModalOpen={isModalOpen}
             onCloseModal={onCloseModal}
         />
-    );
+  )
 }
 
-export default EditCocktail;
+export default EditCocktail

@@ -1,16 +1,17 @@
-import CocktailForm from "@/features/cocktail/CocktailForm";
-import {FC} from "react";
+import React from 'react'
+import CocktailForm from '@/features/cocktail/CocktailForm'
+import { type FC } from 'react'
 
 interface AddCocktailProps {
-    isModalOpen: boolean,
-    onCloseModal: () => void,
+  isModalOpen: boolean
+  onCloseModal: () => void
 }
 
 const AddCocktail: FC<AddCocktailProps> = ({
-    isModalOpen,
-    onCloseModal,
+  isModalOpen,
+  onCloseModal
 }) => {
-    return (
+  return (
         <CocktailForm
             mode="add"
             className="add-cocktail"
@@ -22,7 +23,7 @@ const AddCocktail: FC<AddCocktailProps> = ({
             isModalOpen={isModalOpen}
             onCloseModal={onCloseModal}
         />
-    );
+  )
 }
 
-export default AddCocktail;
+export default AddCocktail

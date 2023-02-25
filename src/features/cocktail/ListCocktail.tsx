@@ -1,42 +1,43 @@
-import {Grid} from "@mui/material";
-import {BlogPostCard} from "@/features/ui/blog";
-import {IBaseCocktail, ICocktailList} from "@/features/cocktail/type";
-import {FC, useState} from "react";
-import {env} from "@/env";
-import {ViewCocktail} from "@/features/cocktail";
-import {setSelectedCocktail} from "@/features/cocktail/CocktailSlice";
-import {useAppDispatch} from "@/app/hooks";
+import React from 'react'
+import { Grid } from '@mui/material'
+import { BlogPostCard } from '@/features/ui/blog'
+import { type IBaseCocktail, type ICocktailList } from '@/features/cocktail/type'
+import { type FC, useState } from 'react'
+import { env } from '@/env'
+import { ViewCocktail } from '@/features/cocktail'
+import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
+import { useAppDispatch } from '@/app/hooks'
 
 interface ListCocktailProps {
-    cocktails: IBaseCocktail[];
+  cocktails: IBaseCocktail[]
 }
 
 const ListCocktail: FC<ListCocktailProps> = ({
-    cocktails,
+  cocktails
 }) => {
-    const [isOpen, setIsOpen] = useState(false)
-    const dispatch = useAppDispatch()
+  const [isOpen, setIsOpen] = useState(false)
+  const dispatch = useAppDispatch()
 
-    const handleModal = () => setIsOpen(!isOpen)
+  const handleModal = () => { setIsOpen(!isOpen) }
 
-    const formatCocktailList = (items: IBaseCocktail[]): ICocktailList[] => {
-        return items?.map((cocktail, index) => ({
-            id: cocktail.id,
-            cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
-            title: cocktail.name,
-            description: cocktail.description,
-        }));
-    }
+  const formatCocktailList = (items: IBaseCocktail[]): ICocktailList[] => {
+    return items?.map((cocktail, index) => ({
+      id: cocktail.id,
+      cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
+      title: cocktail.name,
+      description: cocktail.description
+    }))
+  }
 
-    const cocktailsList = formatCocktailList(cocktails)
+  const cocktailsList = formatCocktailList(cocktails)
 
-    return (
+  return (
         <>
             <Grid container spacing={3}>
                 {cocktailsList?.map((item: ICocktailList, index: number) => (
                     <BlogPostCard key={item.id} post={item} index={index} onClick={() => {
-                        dispatch(setSelectedCocktail(cocktails[index]))
-                        handleModal()
+                      dispatch(setSelectedCocktail(cocktails[index]))
+                      handleModal()
                     }}/>
                 ))}
             </Grid>
@@ -45,7 +46,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
                 onCloseModal={handleModal}
             />
         </>
-    )
+  )
 }
 
-export default ListCocktail;
+export default ListCocktail

@@ -1,14 +1,14 @@
 // @mui
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles'
 //
-import palette from './palette';
+import palette from './palette'
 
 // ----------------------------------------------------------------------
 
-const color = palette.grey[500];
+const color = palette.grey[500]
 
-export default function customShadows() {
-  const transparent = alpha(color, 0.16);
+export default function customShadows () {
+  const transparent = alpha(color, 0.16)
   return {
     z1: `0 1px 2px 0 ${transparent}`,
     z4: `0 4px 8px 0 ${transparent}`,
@@ -27,6 +27,6 @@ export default function customShadows() {
     //
     card: `0 0 2px 0 ${alpha(color, 0.2)}, 0 12px 24px -4px ${alpha(color, 0.12)}`,
     dialog: `-40px 40px 80px -8px ${alpha(color, 0.24)}`,
-    dropdown: `0 0 2px 0 ${alpha(color, 0.24)}, -20px 20px 40px -4px ${alpha(color, 0.24)}`,
-  };
+    dropdown: `0 0 2px 0 ${alpha(color, 0.24)}, -20px 20px 40px -4px ${alpha(color, 0.24)}`
+  }
 }

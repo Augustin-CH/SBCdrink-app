@@ -1,57 +1,56 @@
-import {IBasePaginate, UUID} from "@/app/shared/types";
-import {faker} from "@faker-js/faker";
+import { IBasePaginate, type UUID } from '@/app/shared/types'
+import { faker } from '@faker-js/faker'
 
 export interface IBaseCocktail {
-    id: UUID
-    name: string,
-    description: string,
-    alcoholLevel: number,
-    alcoholMaxLevel: number,
-    alcoholMinLevel: number,
-    picture: string,
-    ingredients: IIngredient[],
+  id: UUID
+  name: string
+  description: string
+  alcoholLevel: number
+  alcoholMaxLevel: number
+  alcoholMinLevel: number
+  picture: string
+  ingredients: IIngredient[]
 }
 
 export interface IIngredient {
-    id: UUID,
-    proportion: number,
-    order: number,
-    name: string,
-    isAlcohol: boolean,
-    alcoholDegree: number,
+  id: UUID
+  proportion: number
+  order: number
+  name: string
+  isAlcohol: boolean
+  alcoholDegree: number
 }
 
 export interface ICocktailList {
-    id?: UUID,
-    cover?: string,
-    title?: string,
-    createdAt?: Date,
-    view?: number,
-    comment?: number,
-    share?: number,
-    favorite?: number,
-    author?: {
-        name?: string,
-        avatarUrl?: string,
-    }
-    description?: string,
+  id?: UUID
+  cover?: string
+  title?: string
+  createdAt?: Date
+  view?: number
+  comment?: number
+  share?: number
+  favorite?: number
+  author?: {
+    name?: string
+    avatarUrl?: string
+  }
+  description?: string
 }
 
 export interface IStepMakeCocktail {
-    order: number,
-    ingredient: UUID,
-    quantity: number,
+  order: number
+  ingredient: UUID
+  quantity: number
 }
 
-export interface IMakeCocktail extends Array<IStepMakeCocktail>{}
+export interface IMakeCocktail extends Array<IStepMakeCocktail> {}
 
 export interface IRules {
-    glassVolume: number,
-    alcoholLevel: number,
+  glassVolume: number
+  alcoholLevel: number
 }
 
 export interface IFormatStepMakeCocktail {
-    rules: IRules,
-    cocktail: IBaseCocktail,
+  rules: IRules
+  cocktail: IBaseCocktail
 }
-

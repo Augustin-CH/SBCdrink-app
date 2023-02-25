@@ -29,7 +29,6 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.6",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "yup": "^1.0.0"
   },
@@ -37,7 +36,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "eslint": "eslint ./src"
   },
   "eslintConfig": {
     "extends": [
@@ -58,6 +58,14 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.0.0"
+    "@craco/craco": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "eslint": "^8.34.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "typescript": "^4.9.5"
   }
 }

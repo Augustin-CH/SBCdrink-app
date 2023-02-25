@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import PropTypes from 'prop-types'
+import { forwardRef } from 'react'
 // @mui
-import { Box } from '@mui/material';
+import { Box } from '@mui/material'
 
 // ----------------------------------------------------------------------
 
@@ -17,15 +17,15 @@ const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
       bgcolor: 'currentColor',
       mask: `url(${src}) no-repeat center / contain`,
       WebkitMask: `url(${src}) no-repeat center / contain`,
-      ...sx,
+      ...sx
     }}
     {...other}
   />
-));
+))
 
 SvgColor.propTypes = {
   src: PropTypes.string,
-  sx: PropTypes.object,
-};
+  sx: PropTypes.object
+}
 
-export default SvgColor;
+export default SvgColor

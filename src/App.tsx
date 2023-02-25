@@ -1,19 +1,19 @@
-import React from "react";
-import {useRoutes} from "react-router-dom";
-import {routes} from "@/router";
+import React, { type FC } from 'react'
+import { useRoutes } from 'react-router-dom'
+import { routes } from '@/router'
 
 // @mui material components
-import ThemeProvider from "@/assets/theme";
-import CssBaseline from "@mui/material/CssBaseline";
+import ThemeProvider from '@/assets/theme'
+import CssBaseline from '@mui/material/CssBaseline'
 
-const App = () => {
-  const appRoutes = useRoutes(routes);
+const App: FC = () => {
+  const appRoutes = useRoutes(routes)
   return (
       <ThemeProvider>
         <CssBaseline />
         {appRoutes}
       </ThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App

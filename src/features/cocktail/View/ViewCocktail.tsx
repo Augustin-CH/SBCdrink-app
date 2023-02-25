@@ -1,124 +1,122 @@
-import CocktailForm from "@/features/cocktail/CocktailForm";
-import {FC, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "@/app/hooks";
-import {Button, Grid, Modal, Slider, TextField, Typography} from "@mui/material";
-import {Formik, FormikHelpers, useFormik, useFormikContext} from "formik";
-import {IBaseCocktail, IMakeCocktail, IRules} from "@/features/cocktail/type";
-import {AxiosError} from "axios";
-import * as yup from "yup";
-import {useNavigate} from "react-router-dom";
-import {FetchStatus} from "@/app/shared/types";
-import {styled} from "@mui/material/styles";
-import {formatStepMakeCocktail, makeCocktail} from "@/features/cocktail/CocktailSlice";
-import {showNotification} from "@/features/notification/notificationSlice";
-import cocktails from "@_mock/cocktails";
+import React, { type FC, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/app/hooks'
+import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
+import { Formik, type FormikHelpers } from 'formik'
+import { type IRules } from '@/features/cocktail/type'
+import { AxiosError } from 'axios'
+import * as yup from 'yup'
+import { useNavigate } from 'react-router-dom'
+import { type FetchStatus } from '@/app/shared/types'
+import { styled } from '@mui/material/styles'
+import { formatStepMakeCocktail, makeCocktail } from '@/features/cocktail/CocktailSlice'
+import { showNotification } from '@/features/notification/notificationSlice'
 
 const validationSchema = yup.object({
 
-});
+})
 interface ViewCocktailProps {
-    isModalOpen: boolean,
-    onCloseModal: () => void,
+  isModalOpen: boolean
+  onCloseModal: () => void
 }
 
-function textVolume(value: number) {
-    return `${value} cl`;
+function textVolume (value: number) {
+  return `${value} cl`
 }
 
-function textPercentage(value: number) {
-    return `${value} %`;
+function textPercentage (value: number) {
+  return `${value} %`
 }
 
 const marksVolume = [
-    {
-        value: 0,
-        label: '0 cl',
-    },
-    {
-        value: 20,
-        label: '20 cl',
-    },
-    {
-        value: 25,
-        label: '25 cl',
-    },
-    {
-        value: 33,
-        label: '33 cl',
-    },
-    {
-        value: 50,
-        label: '50 cl',
-    },
+  {
+    value: 0,
+    label: '0 cl'
+  },
+  {
+    value: 20,
+    label: '20 cl'
+  },
+  {
+    value: 25,
+    label: '25 cl'
+  },
+  {
+    value: 33,
+    label: '33 cl'
+  },
+  {
+    value: 50,
+    label: '50 cl'
+  }
 ]
 
 const marksPercentage = [
-    {
-        value: 0,
-        label: '0 %',
-    },
-    {
-        value: 25,
-        label: '25 %',
-    },
-    {
-        value: 50,
-        label: '50 %',
-    },
-    {
-        value: 75,
-        label: '75 %',
-    },    {
-        value: 100,
-        label: '100 %',
-    },
+  {
+    value: 0,
+    label: '0 %'
+  },
+  {
+    value: 25,
+    label: '25 %'
+  },
+  {
+    value: 50,
+    label: '50 %'
+  },
+  {
+    value: 75,
+    label: '75 %'
+  }, {
+    value: 100,
+    label: '100 %'
+  }
 ]
 
 const BoxModal = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: 600,
-    minWidth: 350,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-    padding: 20,
-}));
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  maxWidth: 600,
+  minWidth: 350,
+  width: '100%',
+  backgroundColor: theme.palette.background.paper,
+  padding: 20
+}))
 
 const ViewCocktail: FC<ViewCocktailProps> = ({
-    isModalOpen,
-    onCloseModal,
+  isModalOpen,
+  onCloseModal
 }) => {
-    const dispatch = useAppDispatch()
-    const navigate = useNavigate()
-    const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
-    const {selectedCocktail} = useAppSelector(state => state.cocktail)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
+  const { selectedCocktail } = useAppSelector(state => state.cocktail)
 
-    const onSubmit = async (values: IRules, {resetForm}: FormikHelpers<IRules>) => {
-        console.log(values)
-        if (requestStatus === 'idle') {
-            try {
-                setRequestStatus('loading')
-                const stepCocktails = formatStepMakeCocktail({rules: values, cocktail: selectedCocktail})
-                await dispatch(makeCocktail(stepCocktails)).unwrap()
-                resetForm()
-                dispatch(showNotification({
-                    title: "Demande de cocktail envoyée avec succès",
-                    type: "success"
-                }))
-            } catch (e: AxiosError | any) {
-                dispatch(showNotification({
-                    title: "Une erreur est survenue lors de l'envoi de la demande de cocktail",
-                    type: "error",
-                }))
-            } finally {
-                setRequestStatus('idle')
-            }
-        }
+  const onSubmit = async (values: IRules, { resetForm }: FormikHelpers<IRules>) => {
+    console.log(values)
+    if (requestStatus === 'idle') {
+      try {
+        setRequestStatus('loading')
+        const stepCocktails = formatStepMakeCocktail({ rules: values, cocktail: selectedCocktail })
+        await dispatch(makeCocktail(stepCocktails)).unwrap()
+        resetForm()
+        dispatch(showNotification({
+          title: 'Demande de cocktail envoyée avec succès',
+          type: 'success'
+        }))
+      } catch (e: AxiosError | any) {
+        dispatch(showNotification({
+          title: "Une erreur est survenue lors de l'envoi de la demande de cocktail",
+          type: 'error'
+        }))
+      } finally {
+        setRequestStatus('idle')
+      }
     }
+  }
 
-    return (
+  return (
         <Modal
             open={isModalOpen}
             onClose={onCloseModal}
@@ -129,20 +127,20 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                 </Typography>
                 <Formik
                     initialValues={{
-                        glassVolume: 25,
-                        alcoholLevel: selectedCocktail?.alcoholLevel,
+                      glassVolume: 25,
+                      alcoholLevel: selectedCocktail?.alcoholLevel
                     } as IRules}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
                     {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting,
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting
                     }) => (
                         <form onSubmit={handleSubmit}>
                             <Grid container mb={5} pt={5}>
@@ -167,7 +165,6 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                     disabled
                                 />
                             </Grid>
-
 
                             <Grid container spacing={2} justifyContent="space-around">
                                 <Grid item xs={6} textAlign="center">
@@ -218,7 +215,6 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                 </Grid>
                             </Grid>
 
-
                             <Button color="primary" variant="contained" fullWidth type="submit">
                                 Servir le cocktail
                             </Button>
@@ -227,7 +223,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                 </Formik>
             </BoxModal>
         </Modal>
-    );
+  )
 }
 
-export default ViewCocktail;
+export default ViewCocktail

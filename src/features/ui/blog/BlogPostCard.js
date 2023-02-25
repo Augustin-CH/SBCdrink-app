@@ -1,23 +1,23 @@
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 // @mui
-import { styled } from '@mui/material/styles';
-import { Box, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { styled } from '@mui/material/styles'
+import { Box, Card, Grid, Avatar, Typography, CardContent } from '@mui/material'
 // utils
-import { fDate } from '@/features/ui/utils/formatTime';
-import { fShortenNumber } from '@/features/ui/utils/formatNumber';
-import SvgColor from "@/features/ui/components/svg-color";
+import { fDate } from '@/features/ui/utils/formatTime'
+import { fShortenNumber } from '@/features/ui/utils/formatNumber'
+import SvgColor from '@/features/ui/components/svg-color'
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import ChatIcon from '@mui/icons-material/Chat';
-import ShareIcon from '@mui/icons-material/Share';
-
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import ChatIcon from '@mui/icons-material/Chat'
+import ShareIcon from '@mui/icons-material/Share'
 
 // ----------------------------------------------------------------------
 
 const StyledCardMedia = styled('div')({
   position: 'relative',
-  paddingTop: 'calc(100% * 3 / 4)',
-});
+  paddingTop: 'calc(100% * 3 / 4)'
+})
 
 const StyledTitle = styled('h4')({
   height: 44,
@@ -25,8 +25,8 @@ const StyledTitle = styled('h4')({
   WebkitLineClamp: 2,
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
-  margin: '0 0 0 0',
-});
+  margin: '0 0 0 0'
+})
 
 const StyledDescription = styled('p')({
   height: 44,
@@ -34,8 +34,8 @@ const StyledDescription = styled('p')({
   WebkitLineClamp: 2,
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
-  margin: '0 0 0 0',
-});
+  margin: '0 0 0 0'
+})
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   zIndex: 9,
@@ -43,40 +43,40 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   height: 32,
   position: 'absolute',
   left: theme.spacing(3),
-  bottom: theme.spacing(-2),
-}));
+  bottom: theme.spacing(-2)
+}))
 
 const StyledInfo = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'flex-end',
   marginTop: theme.spacing(3),
-  color: theme.palette.text.disabled,
-}));
+  color: theme.palette.text.disabled
+}))
 
 const StyledCover = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
   objectFit: 'cover',
-  position: 'absolute',
-});
+  position: 'absolute'
+})
 
 // ----------------------------------------------------------------------
 
 BlogPostCard.propTypes = {
   post: PropTypes.object.isRequired,
-  index: PropTypes.number,
-};
+  index: PropTypes.number
+}
 
-export default function BlogPostCard({ post, index, onClick }) {
-  const { cover, title, description, view, comment, share, author, createdAt } = post;
+export default function BlogPostCard ({ post, index, onClick }) {
+  const { cover, title, description, view, comment, share, author, createdAt } = post
 
   const POST_INFO = [
-    { number: comment, icon: <ChatIcon fontSize="8" sx={{ marginRight: "5px", marginLeft: "5px" }} /> },
-    { number: view, icon: <VisibilityIcon fontSize="8" sx={{ marginRight: "5px", marginLeft: "5px" }} /> },
-    { number: share, icon: <ShareIcon fontSize="8" sx={{ marginRight: "5px", marginLeft: "5px" }} /> },
-  ];
+    { number: comment, icon: <ChatIcon fontSize="8" sx={{ marginRight: '5px', marginLeft: '5px' }} /> },
+    { number: view, icon: <VisibilityIcon fontSize="8" sx={{ marginRight: '5px', marginLeft: '5px' }} /> },
+    { number: share, icon: <ShareIcon fontSize="8" sx={{ marginRight: '5px', marginLeft: '5px' }} /> }
+  ]
 
   return (
     <Grid item xs={6} sm={6} md={3} key={`card_${index}`} onClick={onClick}>
@@ -142,5 +142,5 @@ export default function BlogPostCard({ post, index, onClick }) {
         </CardContent>
       </Card>
     </Grid>
-  );
+  )
 }
