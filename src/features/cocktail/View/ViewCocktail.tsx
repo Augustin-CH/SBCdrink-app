@@ -10,6 +10,7 @@ import { type FetchStatus } from '@/app/shared/types'
 import { styled } from '@mui/material/styles'
 import { formatStepMakeCocktail, makeCocktail } from '@/features/cocktail/CocktailSlice'
 import { showNotification } from '@/features/notification/notificationSlice'
+import CloseIcon from '@mui/icons-material/Close'
 
 const validationSchema = yup.object({
 
@@ -138,9 +139,16 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
             }}
         >
             <BoxModal>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    {selectedCocktail?.name}
-                </Typography>
+                <Grid container justifyContent="space-between">
+                    <Grid item>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            {selectedCocktail?.name}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <CloseIcon onClick={onCloseModal} style={{ cursor: 'pointer' }} />
+                    </Grid>
+                </Grid>
                 <Formik
                     initialValues={{
                       glassVolume: 25,
@@ -231,9 +239,13 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                 </Grid>
                             </Grid>
 
-                            <Button color="primary" variant="contained" fullWidth type="submit">
+                            <Button color="primary" variant="contained" fullWidth type="submit" sx={{ mb: 2 }}>
                                 Servir le cocktail
                             </Button>
+                            <Button color="inherit" variant="contained" fullWidth onClick={onCloseModal}>
+                                Retour
+                            </Button>
+
                         </Form>
                     )}
                 </Formik>
