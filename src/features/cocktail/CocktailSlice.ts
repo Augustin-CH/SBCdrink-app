@@ -33,7 +33,6 @@ export const cocktailSlice = createSlice({
   initialState,
   reducers: {
     setSelectedCocktail (state, action) {
-      console.log(action.payload)
       state.selectedCocktail = action.payload
     }
   },
@@ -49,12 +48,12 @@ export const cocktailSlice = createSlice({
       })
       .addCase(fetchCocktails.rejected, (state, action) => {
         state.listStatus = 'failed'
-        state.error = action.error.code || null
+        state.error = action.error.code ?? null
       })
   }
 })
 
-export const fetchCocktails = createAsyncThunk<IBaseCocktail[], void, { state: RootState }>('cocktail/fetchCocktails', async () => {
+export const fetchCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
   const resp = await client.get(`${env.REACT_APP_API_URL}/api/recipes/available`)
   return resp.data
 })
@@ -79,8 +78,6 @@ export const formatStepMakeCocktail = ({
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (data) => {
-  console.log(data)
-
   const resp = await client.get(`${env.REACT_APP_API_URL}/api/make/cocktail`)
   return resp.data
 })

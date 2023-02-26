@@ -2,10 +2,10 @@ import React, { type FC, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
 import { Formik, type FormikHelpers } from 'formik'
-import { type IRules } from '@/features/cocktail/type'
+import { type IMakeCocktail, type IRules } from '@/features/cocktail/type'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
 import * as yup from 'yup'
-import { useNavigate } from 'react-router-dom'
 import { type FetchStatus } from '@/app/shared/types'
 import { styled } from '@mui/material/styles'
 import { formatStepMakeCocktail, makeCocktail } from '@/features/cocktail/CocktailSlice'
@@ -19,12 +19,12 @@ interface ViewCocktailProps {
   onCloseModal: () => void
 }
 
-function textVolume (value: number) {
+function textVolume (value: number): string {
   return `${value} cl`
 }
 
-function textPercentage (value: number) {
-  return `${value} %`
+function textPercentage (value: number): string {
+  return `${value.toFixed(0)} %`
 }
 
 const marksVolume = [
@@ -50,28 +50,6 @@ const marksVolume = [
   }
 ]
 
-const marksPercentage = [
-  {
-    value: 0,
-    label: '0 %'
-  },
-  {
-    value: 25,
-    label: '25 %'
-  },
-  {
-    value: 50,
-    label: '50 %'
-  },
-  {
-    value: 75,
-    label: '75 %'
-  }, {
-    value: 100,
-    label: '100 %'
-  }
-]
-
 const BoxModal = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: '50%',
@@ -89,16 +67,26 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
   onCloseModal
 }) => {
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
+  const [stepCocktails, setStepCocktails] = useState<IMakeCocktail>([] as IMakeCocktail)
+
   const { selectedCocktail } = useAppSelector(state => state.cocktail)
 
-  const onSubmit = async (values: IRules, { resetForm }: FormikHelpers<IRules>) => {
-    console.log(values)
+  const ingredientText: string[] = selectedCocktail?.ingredients?.map((item, index) => {
+    const ingredientIndex = stepCocktails.findIndex((step) => step.ingredient === item.id)
+    const quantity = stepCocktails[ingredientIndex]?.quantity.toFixed(1)
+    return `${index !== 0 ? ' ' : ''}${item?.name} (${quantity} cl)`
+  })
+
+  const onValidate = async (values: any): Promise<any> => {
+    setStepCocktails(formatStepMakeCocktail({ rules: values, cocktail: selectedCocktail }))
+  }
+
+  const onSubmit = async (values: IRules, { resetForm }: FormikHelpers<IRules>): Promise<void> => {
     if (requestStatus === 'idle') {
       try {
         setRequestStatus('loading')
-        const stepCocktails = formatStepMakeCocktail({ rules: values, cocktail: selectedCocktail })
+
         await dispatch(makeCocktail(stepCocktails)).unwrap()
         resetForm()
         dispatch(showNotification({
@@ -116,6 +104,28 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
     }
   }
 
+  const marksPercentage = () => {
+    const min = selectedCocktail.alcoholMinLevel
+    const max = selectedCocktail?.alcoholMaxLevel
+    const step = 10
+    const result = []
+    result.push({
+      value: min,
+      label: textPercentage(min)
+    })
+    for (let i = min - min % 10; i <= max; i += step) {
+      result.push({
+        value: i,
+        label: textPercentage(i)
+      })
+    }
+    result.push({
+      value: max,
+      label: textPercentage(max)
+    })
+    return result
+  }
+
   return (
         <Modal
             open={isModalOpen}
@@ -129,9 +139,10 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                     initialValues={{
                       glassVolume: 25,
                       alcoholLevel: selectedCocktail?.alcoholLevel
-                    } as IRules}
+                    }}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
+                    validate={onValidate}
                 >
                     {({
                       values,
@@ -160,7 +171,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                     id="ingedients"
                                     name="ingedients"
                                     label="Ingredients"
-                                    value={selectedCocktail.ingredients.map((item, index) => `${index !== 0 ? ' ' : ''}${item?.name}`)}
+                                    value={ingredientText}
                                     multiline
                                     disabled
                                 />
@@ -192,7 +203,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                 </Grid>
                                 <Grid item xs={6} textAlign="center">
                                     <Typography variant="subtitle1" mb={3}>
-                                        Volume d'alcool
+                                        Volume d&apos;alcool
                                     </Typography>
                                     <Slider
                                         id="alcoholLevel"
@@ -201,13 +212,14 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                         orientation="vertical"
                                         getAriaValueText={textPercentage}
                                         valueLabelDisplay="auto"
-                                        marks={marksPercentage}
+                                        marks={marksPercentage()}
                                         aria-labelledby="non-linear-slider"
                                         sx={{ height: 300, width: 6, marginLeft: '44px', mb: 3 }}
-                                        max={100}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         value={values.alcoholLevel}
+                                        min={selectedCocktail?.alcoholMinLevel}
+                                        max={selectedCocktail?.alcoholMaxLevel}
                                     />
                                     <Typography variant="subtitle1" mb={3}>
                                         {textPercentage(values.alcoholLevel)}
