@@ -1,7 +1,7 @@
 import React, { type FC, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
-import { Formik, type FormikHelpers } from 'formik'
+import { Form, Formik, type FormikHelpers } from 'formik'
 import { type IMakeCocktail, type IRules } from '@/features/cocktail/type'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
@@ -51,15 +51,16 @@ const marksVolume = [
 ]
 
 const BoxModal = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
   maxWidth: 600,
   minWidth: 350,
   width: '100%',
   backgroundColor: theme.palette.background.paper,
-  padding: 20
+  padding: 20,
+  borderRadius: 10,
+  boxShadow: theme.shadows[5],
+  maxHeight: '95vh',
+  overflow: 'auto',
+  margin: 20
 }))
 
 const ViewCocktail: FC<ViewCocktailProps> = ({
@@ -78,7 +79,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
     return `${index !== 0 ? ' ' : ''}${item?.name} (${quantity} cl)`
   })
 
-  const onValidate = async (values: any): Promise<any> => {
+  const onValidate = (values: any) => {
     setStepCocktails(formatStepMakeCocktail({ rules: values, cocktail: selectedCocktail }))
   }
 
@@ -130,6 +131,11 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
         <Modal
             open={isModalOpen}
             onClose={onCloseModal}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
         >
             <BoxModal>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -143,17 +149,15 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                     validate={onValidate}
+                    enableReinitialize={true}
+                    validateOnMount={true}
                 >
                     {({
                       values,
-                      errors,
-                      touched,
                       handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting
+                      handleBlur
                     }) => (
-                        <form onSubmit={handleSubmit}>
+                        <Form>
                             <Grid container mb={5} pt={5}>
                                 <TextField
                                     fullWidth
@@ -230,7 +234,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                             <Button color="primary" variant="contained" fullWidth type="submit">
                                 Servir le cocktail
                             </Button>
-                        </form>
+                        </Form>
                     )}
                 </Formik>
             </BoxModal>
