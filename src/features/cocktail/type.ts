@@ -21,22 +21,6 @@ export interface IIngredient {
   alcoholDegree: number
 }
 
-export interface ICocktailList {
-  id?: UUID
-  cover?: string
-  title?: string
-  createdAt?: Date
-  view?: number
-  comment?: number
-  share?: number
-  favorite?: number
-  author?: {
-    name?: string
-    avatarUrl?: string
-  }
-  description?: string
-}
-
 export interface IStepMakeCocktail {
   order: number
   ingredient: UUID

@@ -1,12 +1,13 @@
 import React from 'react'
 import { Grid } from '@mui/material'
-import { BlogPostCard } from '@/features/ui/blog'
-import { type IBaseCocktail, type ICocktailList } from '@/features/cocktail/type'
+import { BlogPostCard } from '@/features/ui/card'
+import { type IBaseCocktail } from '@/features/cocktail/type'
 import { type FC, useState } from 'react'
 import { env } from '@/env'
 import { ViewCocktail } from '@/features/cocktail'
 import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
+import { type ICardData } from '@/features/ui/card/types'
 
 interface ListCocktailProps {
   cocktails: IBaseCocktail[]
@@ -20,12 +21,20 @@ const ListCocktail: FC<ListCocktailProps> = ({
 
   const handleModal = () => { setIsOpen(!isOpen) }
 
-  const formatCocktailList = (items: IBaseCocktail[]): ICocktailList[] => {
+  const formatCocktailList = (items: IBaseCocktail[]): ICardData[] => {
     return items?.map((cocktail, index) => ({
       id: cocktail.id,
       cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
       title: cocktail.name,
-      description: cocktail.description
+      description: cocktail.description,
+      author: {
+        name: cocktail.name,
+        avatar: 'test'
+      },
+      comment: 0,
+      share: 0,
+      view: 0
+
     }))
   }
 
@@ -34,8 +43,8 @@ const ListCocktail: FC<ListCocktailProps> = ({
   return (
         <>
             <Grid container spacing={3}>
-                {cocktailsList?.map((item: ICocktailList, index: number) => (
-                    <BlogPostCard key={item.id} post={item} index={index} onClick={() => {
+                {cocktailsList?.map((item: ICardData, index: number) => (
+                    <BlogPostCard key={item.id} data={item} index={index} onClick={() => {
                       dispatch(setSelectedCocktail(cocktails[index]))
                       handleModal()
                     }}/>

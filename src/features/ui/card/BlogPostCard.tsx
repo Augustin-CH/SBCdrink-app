@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { type FC } from 'react'
 // @mui
 import { styled } from '@mui/material/styles'
 import { Box, Card, Grid, Avatar, Typography, CardContent } from '@mui/material'
@@ -11,8 +10,7 @@ import SvgColor from '@/features/ui/components/svg-color'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import ChatIcon from '@mui/icons-material/Chat'
 import ShareIcon from '@mui/icons-material/Share'
-
-// ----------------------------------------------------------------------
+import { type ICardData } from '@/features/ui/card/types'
 
 const StyledCardMedia = styled('div')({
   position: 'relative',
@@ -62,32 +60,31 @@ const StyledCover = styled('img')({
   position: 'absolute'
 })
 
-// ----------------------------------------------------------------------
-
-BlogPostCard.propTypes = {
-  post: PropTypes.object.isRequired,
-  index: PropTypes.number
+interface BlogPostCardProps {
+  data: ICardData
+  index: number
+  onClick: () => void
 }
 
-export default function BlogPostCard ({ post, index, onClick }) {
-  const { cover, title, description, view, comment, share, author, createdAt } = post
+const BlogPostCard: FC<BlogPostCardProps> = ({ data, index, onClick }) => {
+  const { cover, title, description, view, comment, share, author, createdAt } = data
 
   const POST_INFO = [
-    { number: comment, icon: <ChatIcon fontSize="8" sx={{ marginRight: '5px', marginLeft: '5px' }} /> },
-    { number: view, icon: <VisibilityIcon fontSize="8" sx={{ marginRight: '5px', marginLeft: '5px' }} /> },
-    { number: share, icon: <ShareIcon fontSize="8" sx={{ marginRight: '5px', marginLeft: '5px' }} /> }
+    { number: comment, icon: <ChatIcon sx={{ marginRight: '5px', marginLeft: '5px' }} /> },
+    { number: view, icon: <VisibilityIcon sx={{ marginRight: '5px', marginLeft: '5px' }} /> },
+    { number: share, icon: <ShareIcon sx={{ marginRight: '5px', marginLeft: '5px' }} /> }
   ]
 
   return (
     <Grid item xs={6} sm={6} md={3} key={`card_${index}`} onClick={onClick}>
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia>
-            {author && (
+            {(author != null) && (
                 <>
-                    <SvgColor
-                        color="paper"
+                     <SvgColor
                         src="/assets/icons/shape-avatar.svg"
-                    />
+                     />
+
                     <StyledAvatar
                         alt={author.name}
                         src={author.avatarUrl}
@@ -99,37 +96,33 @@ export default function BlogPostCard ({ post, index, onClick }) {
         </StyledCardMedia>
 
         <CardContent>
-          {createdAt && (
+          {(createdAt != null) && (
               <Typography gutterBottom variant="caption">
                 {fDate(createdAt)}
               </Typography>
           )}
 
-          {title && (
+          {(title != null) && (
               <StyledTitle
                   color="inherit"
-                  variant="subtitle2"
-                  underline="hover"
               >
                 {title}
               </StyledTitle>
           )}
 
-          {description && (
+          {(description != null) && (
               <StyledDescription
                   color="inherit"
-                  variant="subtitle2"
-                  underline="hover"
               >
                 {description}
               </StyledDescription>
           )}
 
-          { (view || comment || share) && (
+          { ((view != null) || (comment != null) || (share != null)) && (
               <StyledInfo>
                 {POST_INFO.map((info, index) => {
                   const number = fShortenNumber(info.number)
-                  return !!number.length && (
+                  return (Boolean(number.length)) && (
                       <Box key={index}>
                         {info.icon}
                         <Typography variant="caption">{number}</Typography>
@@ -144,3 +137,5 @@ export default function BlogPostCard ({ post, index, onClick }) {
     </Grid>
   )
 }
+
+export default BlogPostCard
