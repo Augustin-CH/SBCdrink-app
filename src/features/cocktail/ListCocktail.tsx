@@ -26,15 +26,8 @@ const ListCocktail: FC<ListCocktailProps> = ({
       id: cocktail.id,
       cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
       title: cocktail.name,
-      description: cocktail.description,
-      author: {
-        name: cocktail.name,
-        avatar: 'test'
-      },
-      comment: 0,
-      share: 0,
-      view: 0
-
+      subTitle: cocktail.ingredients.map((ingredient) => ingredient.name).join(', '),
+      description: cocktail.description
     }))
   }
 
