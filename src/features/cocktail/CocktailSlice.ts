@@ -72,13 +72,13 @@ export const formatStepMakeCocktail = ({
     return {
       order: ingredient.order,
       ingredient: ingredient.id,
-      quantity: (ingredient.isAlcohol ? alcoholVolume : noAlcoholVolume) * (ingredient.proportion / 100)
+      quantity: Math.round((ingredient.isAlcohol ? alcoholVolume : noAlcoholVolume) * (ingredient.proportion / 100)*10)/10
     }
   })
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (data) => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/api/make/cocktail`)
+  const resp = await client.post(`${env.REACT_APP_API_URL}/api/cocktail/make`, data)
   return resp.data
 })
 
