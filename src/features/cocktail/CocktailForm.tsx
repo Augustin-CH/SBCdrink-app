@@ -6,9 +6,10 @@ import { type FC, useState } from 'react'
 import { type IBaseCocktail } from '@/features/cocktail/type'
 import { useAppDispatch } from '@/app/hooks'
 import { type FetchStatus } from '@/app/shared/types'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
-import { useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material/styles'
+import { showNotification } from '@/features/notification/notificationSlice'
 
 const validationSchema = yup.object({
 
@@ -52,7 +53,6 @@ const CocktailForm: FC<CocktailFormProps> = ({
   onCloseModal
 }) => {
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
 
   const formik = useFormik({
@@ -62,19 +62,19 @@ const CocktailForm: FC<CocktailFormProps> = ({
       if (requestStatus === 'idle') {
         try {
           setRequestStatus('loading')
-          // @ts-expect-error
+          // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
           await dispatch(request(values)).unwrap()
           onReset()
-          // dispatch(showNotification({
-          //     ...notificationSuccess,
-          //     type: "success"
-          // }))
-          // mode === "add" && navigate(`/promotions/${values.reference}`)
+          dispatch(showNotification({
+            title: notificationSuccess,
+            type: 'success'
+          }))
         } catch (e: AxiosError | any) {
-          // dispatch(showNotification({
-          //     ...notificationError,
-          //     type: "error"
-          // }))
+          dispatch(showNotification({
+            title: notificationError,
+            type: 'error'
+          }))
         } finally {
           setRequestStatus('idle')
         }
@@ -106,7 +106,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
                             value={formik.values.name}
                             onChange={formik.handleChange}
                             error={formik.touched.name && Boolean(formik.errors.name)}
-                            helperText={formik.touched.name && formik.errors.name}
+                            helperText={formik.touched.name && String(formik.errors.name)}
                         />
 
                         <TextField
@@ -117,7 +117,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
                             value={formik.values.description}
                             onChange={formik.handleChange}
                             error={formik.touched.description && Boolean(formik.errors.description)}
-                            helperText={formik.touched.description && formik.errors.description}
+                            helperText={formik.touched.description && String(formik.errors.description)}
                             multiline
                         />
                     </Grid>

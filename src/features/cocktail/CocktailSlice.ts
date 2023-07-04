@@ -78,7 +78,7 @@ export const formatStepMakeCocktail = ({
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (data) => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/api/make/cocktail`)
+  const resp = await client.post(`${env.REACT_APP_API_URL}/api/make/cocktail`, data)
   return resp.data
 })
 
