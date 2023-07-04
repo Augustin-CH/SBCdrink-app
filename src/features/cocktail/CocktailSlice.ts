@@ -72,7 +72,7 @@ export const formatStepMakeCocktail = ({
     return {
       order: ingredient.order,
       ingredient: ingredient.id,
-      quantity: Math.round((ingredient.isAlcohol ? alcoholVolume : noAlcoholVolume) * (ingredient.proportion / 100)*10)/10
+      quantity: Math.round((ingredient.isAlcohol ? alcoholVolume : noAlcoholVolume) * (ingredient.proportion / 100) * 10) / 10
     }
   })
 }
