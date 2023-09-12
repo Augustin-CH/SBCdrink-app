@@ -1,7 +1,13 @@
 import React from 'react'
 import Main from '@/layouts/Main'
-import Home from '@/pages/Home'
+import Dashboard from '@/layouts/Dashboard'
 import { Navigate } from 'react-router-dom'
+import paths from './paths'
+import LocalBarIcon from '@mui/icons-material/LocalBar'
+import LiquorIcon from '@mui/icons-material/Liquor'
+import WaterDropIcon from '@mui/icons-material/WaterDrop'
+import Home from '@/pages/Home'
+import Bottle from '@/pages/dashboard/Bottle'
 
 export interface RouteConstants {
   element: any
@@ -18,15 +24,51 @@ export interface RouteConstants {
 
 export const routes: RouteConstants[] = [
   {
+    element: <Dashboard/>,
+    path: paths.dashboard.index,
+    children: [
+      {
+        path: paths.dashboard.bottle,
+        element: <Bottle/>,
+        sidebar: {
+          label: 'Bouteilles',
+          icon: <LiquorIcon/>,
+          page: 'bottle',
+          position: 1
+        }
+      },
+      {
+        path: paths.dashboard.cocktail,
+        element: <h1>Cocktail</h1>,
+        sidebar: {
+          label: 'Cocktails',
+          icon: <LocalBarIcon/>,
+          page: 'cocktail',
+          position: 2
+        }
+      },
+      {
+        path: paths.dashboard.ingredient,
+        element: <h1>Ingredient</h1>,
+        sidebar: {
+          label: 'Ingredients',
+          icon: <WaterDropIcon/>,
+          page: 'ingredient',
+          position: 3
+        }
+      }
+    ]
+  },
+  {
     element: <Main/>,
     children: [
       {
-        path: '/',
+        path: paths.home,
         element: <Home/>
       },
       {
         path: '*',
-        element: <Navigate to="/" replace/>
+        element: <Navigate to={paths.home} replace/>
       }
     ]
   }

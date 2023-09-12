@@ -8,7 +8,8 @@ export default function Paper () {
       },
       styleOverrides: {
         root: {
-          backgroundImage: 'none'
+          backgroundImage: 'none',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)'
         }
       }
     }

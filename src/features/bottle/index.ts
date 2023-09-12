@@ -1,4 +1,4 @@
-import ManageModal from './ManageModal'
+import ManageModal from './ManageBottles'
 export {
   ManageModal
 }

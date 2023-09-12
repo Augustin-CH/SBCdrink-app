@@ -1,4 +1,4 @@
-import React, { type FC, useContext, useEffect, useState, useCallback } from 'react'
+import React, { type FC, useContext, useEffect } from 'react'
 import { Button, Container, Stack, Typography, useTheme } from '@mui/material'
 import { ListCocktail } from '@/features/cocktail'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
@@ -6,29 +6,17 @@ import { fetchAvailableCocktails } from '@/features/cocktail/CocktailSlice'
 import { TextNeon } from '@/features/ui/components/TextNeon/TextNeon'
 import { SwitchTheme } from '@/features/ui/components/SwitchTheme/SwitchTheme'
 import { ColorModeContext } from '@/assets/theme'
-import { fetchBottles } from '@/features/bottle/BottleSlice'
-import { ManageModal } from '@/features/bottle'
-import { fetchIngredients } from '@/features/ingredient/IngredientSlice'
 import Loader from '@/features/ui/loader/loader'
+import { useNavigate } from 'react-router-dom'
+import paths from '@/router/paths'
 
 const Home: FC = () => {
-  const [isOpenManageModal, setIsOpenManageModal] = useState(false)
   const { setMode } = useContext(ColorModeContext)
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const { listCocktails, listCocktailsStatus } = useAppSelector(state => state.cocktail)
-  const { listBottles, listBottlesStatus } = useAppSelector(state => state.bottle)
-  const { listIngredients, listIngredientsStatus } = useAppSelector(state => state.ingredient)
 
-  const handleManageModal = useCallback(() => {
-    setIsOpenManageModal(!isOpenManageModal)
-  }, [isOpenManageModal])
-
-  const openBottleModal = useCallback(() => {
-    handleManageModal()
-    dispatch(fetchBottles())
-    dispatch(fetchIngredients())
-  }, [dispatch, handleManageModal])
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(fetchAvailableCocktails())
@@ -61,18 +49,10 @@ const Home: FC = () => {
 
       <ListCocktail cocktails={listCocktails} />
       <Stack direction="row" alignItems="center" justifyContent="flex-end" mb={5} mt={5}>
-          <Button variant="contained" onClick={openBottleModal} sx={{ mb: 5 }}>
+          <Button variant="contained" onClick={() => navigate(paths.dashboard.bottle)} sx={{ mb: 5 }}>
               Manage
           </Button>
       </Stack>
-      <ManageModal
-        bottles={listBottles}
-        listBottlesStatus={listBottlesStatus}
-        ingredients={listIngredients}
-        listIngredientsStatus={listIngredientsStatus}
-        isModalOpen={isOpenManageModal}
-        onCloseModal={handleManageModal}
-      />
     </Container>
   )
 }

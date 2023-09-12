@@ -1,8 +1,7 @@
 import React, { type FC, useState, useCallback, useEffect, useMemo } from 'react'
-import { FormControl, Grid, InputLabel, List, ListItem, ListItemAvatar, MenuItem, Modal, Select, Typography, Button, Box } from '@mui/material'
+import { FormControl, Grid, InputLabel, List, ListItem, ListItemAvatar, MenuItem, Select } from '@mui/material'
 import { useAppDispatch } from '@/app/hooks'
 import { type IBaseBottle } from '@/features/bottle/types'
-import { BoxModal } from '@/features/ui/components/BoxModal/BoxModal'
 import { useFormik } from 'formik'
 import { type FetchStatus } from '@/app/shared/types'
 import { showNotification } from '@/features/notification/notificationSlice'
@@ -29,17 +28,13 @@ interface ListBottleProps {
   listBottlesStatus: FetchStatus
   ingredients: IBaseIngredient[]
   listIngredientsStatus: FetchStatus
-  isModalOpen: boolean
-  onCloseModal: () => void
 }
 
-const ManageModal: FC<ListBottleProps> = ({
+const ManageBottles: FC<ListBottleProps> = ({
   bottles,
   listBottlesStatus,
   ingredients,
-  listIngredientsStatus,
-  isModalOpen,
-  onCloseModal
+  listIngredientsStatus
 }) => {
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
   const [indexModifiedRow, setIndexModifiedRow] = useState<number | null>(null)
@@ -76,11 +71,6 @@ const ManageModal: FC<ListBottleProps> = ({
       }
     }
   })
-
-  const onReset = useCallback(() => {
-    formik.resetForm()
-    formik.setFieldValue('bottles', bottles)
-  }, [bottles, formik])
 
   const handleChangeBottle = useCallback((value: number, index: number) => {
     const targetIngredient = ingredients.find((ingredient) => +ingredient.id === value)
@@ -166,16 +156,15 @@ const ManageModal: FC<ListBottleProps> = ({
     } else {
       return (
         <>
-          <Box flexDirection={'row'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+          {/* <Box flexDirection={'row'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
             <Typography id="modal-title" variant="h6" component="h2">
-                Manage bottles
+                Liste des bouteilles
             </Typography>
-            <Button color="primary" variant="contained" onClick={onReset}>
-                Reset
-            </Button>
-          </Box>
+          </Box> */}
           <form onSubmit={formik.handleSubmit}>
-            <Grid container mb={5} pt={5}>
+            <Grid container mb={5}
+            // pt={5}
+            >
               <List sx={{ width: '100%' }}>
                 {formik.values.bottles.map((bottle: IBaseBottle, index: number) => (
                   <ListItem key={`list_bottle_${bottle.slot}`}>
@@ -205,20 +194,10 @@ const ManageModal: FC<ListBottleProps> = ({
   }, [formik.values.bottles])
 
   return (
-    <Modal
-      open={isModalOpen}
-      onClose={onCloseModal}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <BoxModal>
-          {renderContent()}
-      </BoxModal>
-    </Modal>
+    <>
+      {renderContent()}
+    </>
   )
 }
 
-export default ManageModal
+export default ManageBottles
