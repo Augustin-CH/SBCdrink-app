@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { type NotificationType } from '@/features/notification/type'
+import { type NotificationType } from '@features/notification/types'
 import { useAppSelector } from '@/app/hooks'
 import { useSnackbar } from 'notistack'
 import { Button } from '@mui/material'

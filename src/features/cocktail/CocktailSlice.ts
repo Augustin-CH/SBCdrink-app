@@ -6,7 +6,7 @@ import {
 } from '@/app/store'
 import {
   type IBaseCocktail, type IFormatStepMakeCocktail, type IMakeCocktail
-} from './type'
+} from './types'
 import { env } from '@/env'
 
 const client = ApiClient.Instance()
@@ -14,8 +14,7 @@ const client = ApiClient.Instance()
 export interface CocktailState {
   selectedCocktail: IBaseCocktail
   listCocktails: IBaseCocktail[]
-
-  listStatus: FetchStatus
+  listCocktailsStatus: FetchStatus
   singleStatus: FetchStatus
   error: string | null
 }
@@ -23,7 +22,7 @@ export interface CocktailState {
 const initialState: CocktailState = {
   selectedCocktail: {} as IBaseCocktail,
   listCocktails: [] as IBaseCocktail[],
-  listStatus: 'idle',
+  listCocktailsStatus: 'idle',
   singleStatus: 'idle',
   error: null
 }
@@ -38,22 +37,21 @@ export const cocktailSlice = createSlice({
   },
   extraReducers (builder) {
     builder
-
-      .addCase(fetchCocktails.pending, (state) => {
-        state.listStatus = 'loading'
+      .addCase(fetchAvailableCocktails.pending, (state) => {
+        state.listCocktailsStatus = 'loading'
       })
-      .addCase(fetchCocktails.fulfilled, (state, action) => {
-        state.listStatus = 'succeeded'
+      .addCase(fetchAvailableCocktails.fulfilled, (state, action) => {
+        state.listCocktailsStatus = 'succeeded'
         state.listCocktails = action.payload
       })
-      .addCase(fetchCocktails.rejected, (state, action) => {
-        state.listStatus = 'failed'
+      .addCase(fetchAvailableCocktails.rejected, (state, action) => {
+        state.listCocktailsStatus = 'failed'
         state.error = action.error.code ?? null
       })
   }
 })
 
-export const fetchCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
+export const fetchAvailableCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
   const resp = await client.get(`${env.REACT_APP_API_URL}/api/recipes/available`)
   return resp.data
 })

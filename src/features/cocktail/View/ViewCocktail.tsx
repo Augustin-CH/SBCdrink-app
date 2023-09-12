@@ -2,15 +2,15 @@ import React, { type FC, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
 import { Form, Formik, type FormikHelpers } from 'formik'
-import { type IMakeCocktail, type IRules } from '@/features/cocktail/type'
+import { type IMakeCocktail, type IRules } from '@features/cocktail/types'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
 import * as yup from 'yup'
 import { type FetchStatus } from '@/app/shared/types'
-import { styled } from '@mui/material/styles'
 import { formatStepMakeCocktail, makeCocktail } from '@/features/cocktail/CocktailSlice'
 import { showNotification } from '@/features/notification/notificationSlice'
 import CloseIcon from '@mui/icons-material/Close'
+import { BoxModal } from '@/features/ui/components/BoxModal/BoxModal'
 
 const validationSchema = yup.object({
 
@@ -50,19 +50,6 @@ const marksVolume = [
     label: '50 cl'
   }
 ]
-
-const BoxModal = styled('div')(({ theme }) => ({
-  maxWidth: 600,
-  minWidth: 350,
-  width: '100%',
-  backgroundColor: theme.palette.background.paper,
-  padding: 20,
-  borderRadius: 10,
-  boxShadow: theme.shadows[5],
-  maxHeight: '95vh',
-  overflow: 'auto',
-  margin: 20
-}))
 
 const ViewCocktail: FC<ViewCocktailProps> = ({
   isModalOpen,

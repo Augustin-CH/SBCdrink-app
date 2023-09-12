@@ -2,10 +2,14 @@ import { configureStore, type ThunkAction, type Action } from '@reduxjs/toolkit'
 import { env } from '@/env'
 import cocktailReducer from '@/features/cocktail/CocktailSlice'
 import notificationReducer from '@/features/notification/notificationSlice'
+import bottleReducer from '@/features/bottle/BottleSlice'
+import ingredientReducer from '@/features/ingredient/IngredientSlice'
 
 export const store = configureStore({
   reducer: {
+    bottle: bottleReducer,
     cocktail: cocktailReducer,
+    ingredient: ingredientReducer,
     notification: notificationReducer
   },
   devTools: env.REACT_APP_ENVIRONMENT === 'development'

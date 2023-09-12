@@ -1,5 +1,5 @@
-import { IBasePaginate, type UUID } from '@/app/shared/types'
-import { faker } from '@faker-js/faker'
+import { type UUID } from '@/app/shared/types'
+import { type IBaseIngredient } from '@/features/ingredient/types'
 
 export interface IBaseCocktail {
   id: UUID
@@ -9,16 +9,7 @@ export interface IBaseCocktail {
   alcoholMaxLevel: number
   alcoholMinLevel: number
   picture: string
-  ingredients: IIngredient[]
-}
-
-export interface IIngredient {
-  id: UUID
-  proportion: number
-  order: number
-  name: string
-  isAlcohol: boolean
-  alcoholDegree: number
+  ingredients: IBaseIngredient[]
 }
 
 export interface IStepMakeCocktail {

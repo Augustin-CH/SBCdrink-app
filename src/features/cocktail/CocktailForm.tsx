@@ -3,13 +3,13 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { Button, Grid, Modal, TextField, Typography } from '@mui/material'
 import { type FC, useState } from 'react'
-import { type IBaseCocktail } from '@/features/cocktail/type'
+import { type IBaseCocktail } from '@features/cocktail/types'
 import { useAppDispatch } from '@/app/hooks'
 import { type FetchStatus } from '@/app/shared/types'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
-import { styled } from '@mui/material/styles'
 import { showNotification } from '@/features/notification/notificationSlice'
+import { BoxModal } from '@/features/ui/components/BoxModal/BoxModal'
 
 const validationSchema = yup.object({
 
@@ -27,18 +27,6 @@ interface CocktailFormProps {
   isModalOpen: boolean
   onCloseModal: () => void
 }
-
-const BoxModal = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  maxWidth: 600,
-  minWidth: 350,
-  width: '100%',
-  backgroundColor: theme.palette.background.paper,
-  padding: 20
-}))
 
 const CocktailForm: FC<CocktailFormProps> = ({
   mode,
@@ -92,7 +80,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
             onClose={onCloseModal}
         >
             <BoxModal>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-title" variant="h6" component="h2">
                     {title}
                 </Typography>
                 <form onSubmit={formik.handleSubmit}>

@@ -21,16 +21,13 @@ export interface IPaginate extends IPaginateParams {
   totalElements: number
 }
 
-export interface IBasePaginate {
-  meta?: {
-    perPages?: number
-    totalElements?: number
-    totalPages?: number
-    currentPage?: number
-  }
-  links?: {
-    first?: string
-    self?: string
-    last?: string
-  }
+export interface IBasePagination {
+  page: number
+  pageCount: number
+  pageSize: number
+  total: number
+}
+
+export interface IBaseMeta {
+  pagination: IBasePagination
 }

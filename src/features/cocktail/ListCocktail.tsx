@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid } from '@mui/material'
 import { BlogPostCard } from '@/features/ui/card'
-import { type IBaseCocktail } from '@/features/cocktail/type'
+import { type IBaseCocktail } from '@features/cocktail/types'
 import { type FC, useState } from 'react'
 import { env } from '@/env'
 import { ViewCocktail } from '@/features/cocktail'
