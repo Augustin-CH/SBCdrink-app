@@ -7,7 +7,7 @@ const BoxModal = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   padding: 20,
   borderRadius: 10,
-  boxShadow: theme.shadows[5],
+  boxShadow: theme.shadows[2],
   maxHeight: '95vh',
   minHeight: 300,
   overflow: 'auto',
