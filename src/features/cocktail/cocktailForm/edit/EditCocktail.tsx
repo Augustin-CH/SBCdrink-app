@@ -1,14 +1,17 @@
 import React from 'react'
-import CocktailForm from '@/features/cocktail/CocktailForm'
+import CocktailForm from '@/features/cocktail/cocktailForm/CocktailForm'
 import { type FC } from 'react'
 import { useAppSelector } from '@/app/hooks'
+import { type IBaseIngredient } from '@/features/ingredient/types'
 
 interface EditCocktailProps {
+  ingredients: IBaseIngredient[]
   isModalOpen: boolean
   onCloseModal: () => void
 }
 
 const EditCocktail: FC<EditCocktailProps> = ({
+  ingredients,
   isModalOpen,
   onCloseModal
 }) => {
@@ -26,6 +29,7 @@ const EditCocktail: FC<EditCocktailProps> = ({
             notificationError="Une erreur est survenue lors de la modification du cocktail"
             isModalOpen={isModalOpen}
             onCloseModal={onCloseModal}
+            ingredients={ingredients}
         />
   )
 }

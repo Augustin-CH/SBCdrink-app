@@ -20,14 +20,14 @@ export const Notification = () => {
       autoHideDuration: 3000,
       persist: false,
       action: (key) => (
-                <Button
-                    onClick={() => {
-                      closeSnackbar(key)
-                    }}
-                    color="inherit"
-                >
-                    <CloseIcon/>
-                </Button>
+        <Button
+          onClick={() => {
+            closeSnackbar(key)
+          }}
+          color="inherit"
+        >
+          <CloseIcon/>
+        </Button>
       )
     })
   }, [])
@@ -39,6 +39,6 @@ export const Notification = () => {
   }, [notif, openNotificationWithIcon])
 
   return (
-        <></>
+    <></>
   )
 }

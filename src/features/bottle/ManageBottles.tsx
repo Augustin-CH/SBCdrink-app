@@ -3,7 +3,7 @@ import { FormControl, Grid, InputLabel, List, ListItem, ListItemAvatar, MenuItem
 import { useAppDispatch } from '@/app/hooks'
 import { type IBaseBottle } from '@/features/bottle/types'
 import { useFormik } from 'formik'
-import { type FetchStatus } from '@/app/shared/types'
+import { type UUID, type FetchStatus } from '@/app/shared/types'
 import { showNotification } from '@/features/notification/notificationSlice'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
@@ -23,14 +23,14 @@ const validationSchema = yup.object({
   )
 })
 
-interface ListBottleProps {
+interface ManageBottlesProps {
   bottles: IBaseBottle[]
   listBottlesStatus: FetchStatus
   ingredients: IBaseIngredient[]
   listIngredientsStatus: FetchStatus
 }
 
-const ManageBottles: FC<ListBottleProps> = ({
+const ManageBottles: FC<ManageBottlesProps> = ({
   bottles,
   listBottlesStatus,
   ingredients,
@@ -47,7 +47,6 @@ const ManageBottles: FC<ListBottleProps> = ({
     validationSchema,
     onSubmit: async (values) => {
       const value = values.bottles[indexModifiedRow as number]
-      console.log('values', values)
 
       formik.validateField('bottles')
       if (requestStatus === 'idle') {
@@ -75,9 +74,6 @@ const ManageBottles: FC<ListBottleProps> = ({
   const handleChangeBottle = useCallback((value: number, index: number) => {
     const targetIngredient = ingredients.find((ingredient) => +ingredient.id === value)
 
-    console.log('index', index)
-    console.log('targetIngredient', targetIngredient)
-
     if (targetIngredient) {
       Promise.all([
         formik.setFieldValue(`bottles[${index}].ingredientName`, targetIngredient.name),
@@ -95,15 +91,15 @@ const ManageBottles: FC<ListBottleProps> = ({
     formik.submitForm()
   }, [])
 
-  const renderSelectIngredient = useCallback((slot: number, value: number, index: number) => (
+  const renderSelectIngredient = useCallback((value: UUID, index: number) => (
     <FormControl fullWidth sx={{ margin: '5px 10px', minWidth: 150 }} >
-      <InputLabel id={`bottle-cocktail-${slot}`}>Ingredient</InputLabel>
+      <InputLabel id={`bottles[${index}].ingredientId`}>Ingredient</InputLabel>
       <Select
-        labelId={`bottles.[${index}].ingredientId`}
-        id="demo-simple-select"
+        labelId={`bottles[${index}].ingredientId`}
+        id="select"
         value={value}
-        label={`bottles.[${index}].ingredientId`}
-        name={`bottles.[${index}].ingredientId`}
+        label={`bottles[${index}].ingredientId`}
+        name={`bottles[${index}].ingredientId`}
         onChange={(e) => handleChangeBottle(+e.target.value, index)}
       >
         {ingredients.map((ingredient) => (
@@ -119,13 +115,13 @@ const ManageBottles: FC<ListBottleProps> = ({
     { value: 50, label: '50 cl' }
   ], [])
 
-  const renderSelectVolume = useCallback((slot: number, value: number, index: number) => {
+  const renderSelectVolume = useCallback((value: number, index: number) => {
     return (
       <FormControl fullWidth sx={{ margin: '5px 10px', minWidth: 150 }} >
         <InputLabel id={`bottles[${index}].measureVolume`}>Volume</InputLabel>
         <Select
           labelId={`bottles[${index}].measureVolume`}
-          id="demo-simple-select"
+          id="select"
           value={value}
           label={`bottles[${index}].measureVolume`}
           onChange={(e) => handleChangeVolume(+e.target.value, index)}
@@ -171,8 +167,8 @@ const ManageBottles: FC<ListBottleProps> = ({
                     <ListItemAvatar>
                       {bottle.slot}
                     </ListItemAvatar>
-                    {renderSelectIngredient(bottle.slot, bottle.ingredientId, index)}
-                    {renderSelectVolume(bottle.slot, bottle.measureVolume, index)}
+                    {renderSelectIngredient(bottle.ingredientId, index)}
+                    {renderSelectVolume(bottle.measureVolume, index)}
                   </ListItem>
                 ))}
               </List>
@@ -188,10 +184,6 @@ const ManageBottles: FC<ListBottleProps> = ({
       formik.setFieldValue('bottles', bottles)
     }
   }, [bottles, listBottlesStatus])
-
-  useEffect(() => {
-    console.log('formik.values.bottles', formik.values.bottles)
-  }, [formik.values.bottles])
 
   return (
     <>

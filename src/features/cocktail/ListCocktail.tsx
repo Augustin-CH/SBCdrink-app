@@ -1,20 +1,25 @@
 import React from 'react'
-import { Grid } from '@mui/material'
+import { Button, Grid } from '@mui/material'
 import { BlogPostCard } from '@/features/ui/card'
 import { type IBaseCocktail } from '@features/cocktail/types'
 import { type FC, useState } from 'react'
 import { env } from '@/env'
-import { ViewCocktail } from '@/features/cocktail'
+import { EditCocktail, ViewCocktail } from '@/features/cocktail'
 import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
 import { type ICardData } from '@/features/ui/card/types'
+import { type IBaseIngredient } from '@/features/ingredient/types'
 
 interface ListCocktailProps {
   cocktails: IBaseCocktail[]
+  ingredients?: IBaseIngredient[]
+  isEdit?: boolean
 }
 
 const ListCocktail: FC<ListCocktailProps> = ({
-  cocktails
+  cocktails,
+  ingredients,
+  isEdit
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useAppDispatch()
@@ -35,18 +40,42 @@ const ListCocktail: FC<ListCocktailProps> = ({
 
   return (
         <>
-            <Grid container spacing={3}>
-                {cocktailsList?.map((item: ICardData, index: number) => (
-                    <BlogPostCard key={item.id} data={item} index={index} onClick={() => {
-                      dispatch(setSelectedCocktail(cocktails[index]))
-                      handleModal()
-                    }}/>
-                ))}
-            </Grid>
-            <ViewCocktail
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{
+              display: 'flex',
+              justifyContent: 'end',
+              alignItems: 'center',
+              ml: 'auto',
+              mb: 3,
+              mr: 2
+            }}
+          >
+            Ajouter
+          </Button>
+
+          <Grid container spacing={3}>
+            {cocktailsList?.map((item: ICardData, index: number) => (
+              <BlogPostCard key={item.id} data={item} index={index} onClick={() => {
+                dispatch(setSelectedCocktail(cocktails[index]))
+                handleModal()
+              }}/>
+            ))}
+          </Grid>
+          {
+          isEdit && ingredients && isOpen
+            ? (
+              <EditCocktail
+                ingredients={ingredients}
                 isModalOpen={isOpen}
                 onCloseModal={handleModal}
-            />
+              />)
+            : (
+              <ViewCocktail
+                isModalOpen={isOpen}
+                onCloseModal={handleModal}
+              />)}
         </>
   )
 }

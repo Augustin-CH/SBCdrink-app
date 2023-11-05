@@ -1,17 +1,16 @@
-import { type IBaseMeta, type UUID } from '@/app/shared/types'
+import { type IBaseMeta } from '@/app/shared/types'
 
 export interface IBaseIngredient {
-  id: UUID
+  id: number
   proportion: number
   order: number
   name: string
   isAlcohol: boolean
   alcoholDegree: number
 }
-
 export interface IFetchIngredients {
   data: Array<{
-    id: UUID
+    id: number
     attributes: Omit<IBaseIngredient, 'id'>
   }>
   meta: IBaseMeta

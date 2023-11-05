@@ -8,6 +8,8 @@ import LiquorIcon from '@mui/icons-material/Liquor'
 import WaterDropIcon from '@mui/icons-material/WaterDrop'
 import Home from '@/pages/Home'
 import Bottle from '@/pages/dashboard/Bottle'
+import Cocktail from '@/pages/dashboard/Cocktail'
+
 
 export interface RouteConstants {
   element: any
@@ -39,7 +41,7 @@ export const routes: RouteConstants[] = [
       },
       {
         path: paths.dashboard.cocktail,
-        element: <h1>Cocktail</h1>,
+        element: <Cocktail/>,
         sidebar: {
           label: 'Cocktails',
           icon: <LocalBarIcon/>,

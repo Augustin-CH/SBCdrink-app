@@ -1,7 +1,5 @@
-import { type UUID } from '@app/shared/types'
-
 export interface ICardData {
-  id?: UUID
+  id?: number
   cover?: string
   title?: string
   subTitle?: string

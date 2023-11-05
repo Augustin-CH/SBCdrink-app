@@ -16,7 +16,6 @@ const GlassLoader: FC<GlassLoaderProps> = ({
   useEffect(() => {
     let i = 0
     const fillGlass = setInterval(() => {
-      console.log('fillGlass', i)
       setIndexLiquidSVG(i)
       i >= 10 && clearInterval(fillGlass)
       i++

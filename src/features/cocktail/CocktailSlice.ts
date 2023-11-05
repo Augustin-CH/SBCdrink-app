@@ -8,6 +8,7 @@ import {
   type IBaseCocktail, type IFormatStepMakeCocktail, type IMakeCocktail
 } from './types'
 import { env } from '@/env'
+import { calculeVolumeIngredient } from './utils'
 
 const client = ApiClient.Instance()
 
@@ -48,11 +49,27 @@ export const cocktailSlice = createSlice({
         state.listCocktailsStatus = 'failed'
         state.error = action.error.code ?? null
       })
+      .addCase(fetchCocktails.pending, (state) => {
+        state.listCocktailsStatus = 'loading'
+      })
+      .addCase(fetchCocktails.fulfilled, (state, action) => {
+        state.listCocktailsStatus = 'succeeded'
+        state.listCocktails = action.payload
+      })
+      .addCase(fetchCocktails.rejected, (state, action) => {
+        state.listCocktailsStatus = 'failed'
+        state.error = action.error.code ?? null
+      })
   }
 })
 
 export const fetchAvailableCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
   const resp = await client.get(`${env.REACT_APP_API_URL}/api/recipes/available`)
+  return resp.data
+})
+
+export const fetchCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/recipes/find`)
   return resp.data
 })
 
@@ -63,14 +80,11 @@ export const formatStepMakeCocktail = ({
   const { glassVolume, alcoholLevel } = rules
   const { ingredients } = cocktail
 
-  const alcoholVolume = glassVolume * (alcoholLevel / 100)
-  const noAlcoholVolume = glassVolume - alcoholVolume
-
   return ingredients.map((ingredient) => {
     return {
       order: ingredient.order,
       ingredient: ingredient.id,
-      quantity: Math.round((ingredient.isAlcohol ? alcoholVolume : noAlcoholVolume) * (ingredient.proportion / 100) * 10) / 10
+      quantity: calculeVolumeIngredient(alcoholLevel, glassVolume, ingredient)
     }
   })
 }

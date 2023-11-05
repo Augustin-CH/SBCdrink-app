@@ -1,8 +1,7 @@
-import { type UUID } from '@/app/shared/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 
 export interface IBaseCocktail {
-  id: UUID
+  id: number
   name: string
   description: string
   alcoholLevel: number
@@ -12,9 +11,18 @@ export interface IBaseCocktail {
   ingredients: IBaseIngredient[]
 }
 
+export interface IIngredientCocktailForm extends IBaseIngredient {
+  volume: number
+}
+
+export interface IFormCocktail extends IBaseCocktail {
+  glassVolume: number
+  ingredients: IIngredientCocktailForm[]
+}
+
 export interface IStepMakeCocktail {
   order: number
-  ingredient: UUID
+  ingredient: number
   quantity: number
 }
 

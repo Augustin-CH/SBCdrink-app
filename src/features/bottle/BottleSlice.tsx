@@ -50,7 +50,6 @@ export const fetchBottles = createAsyncThunk<IBaseBottle[], undefined, { state: 
 export const updateBottles = createAsyncThunk<undefined, IUpdateBottles, { state: RootState }>('bottle/updateBottles', async ({
   bottle
 }) => {
-  console.log(bottle)
   const resp = await client.put(`${env.REACT_APP_API_URL}/api/machine-configurations/${bottle?.slot}`, {
     ingredient: bottle?.ingredientId,
     volume: bottle?.measureVolume,

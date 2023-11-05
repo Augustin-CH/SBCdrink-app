@@ -2,7 +2,7 @@ import React, { type FC, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
 import { Form, Formik, type FormikHelpers } from 'formik'
-import { type IMakeCocktail, type IRules } from '@features/cocktail/types'
+import { type IMakeCocktail, type IRules } from '@/features/cocktail/types'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from 'axios'
 import * as yup from 'yup'
@@ -11,6 +11,8 @@ import { formatStepMakeCocktail, makeCocktail } from '@/features/cocktail/Cockta
 import { showNotification } from '@/features/notification/notificationSlice'
 import CloseIcon from '@mui/icons-material/Close'
 import { BoxModal } from '@/features/ui/components/BoxModal/BoxModal'
+import { marksVolume } from '../constant'
+import { textPercentage, textVolume } from '../utils'
 
 const validationSchema = yup.object({
 
@@ -19,37 +21,6 @@ interface ViewCocktailProps {
   isModalOpen: boolean
   onCloseModal: () => void
 }
-
-function textVolume (value: number): string {
-  return `${value} cl`
-}
-
-function textPercentage (value: number): string {
-  return `${value.toFixed(0)} %`
-}
-
-const marksVolume = [
-  {
-    value: 0,
-    label: '0 cl'
-  },
-  {
-    value: 20,
-    label: '20 cl'
-  },
-  {
-    value: 25,
-    label: '25 cl'
-  },
-  {
-    value: 33,
-    label: '33 cl'
-  },
-  {
-    value: 50,
-    label: '50 cl'
-  }
-]
 
 const ViewCocktail: FC<ViewCocktailProps> = ({
   isModalOpen,
@@ -95,7 +66,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
 
   const marksPercentage = () => {
     const min = selectedCocktail.alcoholMinLevel
-    const max = selectedCocktail?.alcoholMaxLevel
+    const max = selectedCocktail.alcoholMaxLevel
     const step = 10
     const result = []
     result.push({
@@ -169,7 +140,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                     fullWidth
                                     id="ingedients"
                                     name="ingedients"
-                                    label="Ingredients"
+                                    label="Ingrédients"
                                     value={ingredientText}
                                     multiline
                                     disabled
@@ -184,7 +155,6 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                     <Slider
                                         id="glassVolume"
                                         name="glassVolume"
-                                        aria-label="Temperature"
                                         orientation="vertical"
                                         getAriaValueText={textVolume}
                                         valueLabelDisplay="auto"
@@ -207,7 +177,6 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                     <Slider
                                         id="alcoholLevel"
                                         name="alcoholLevel"
-                                        aria-label="Temperature"
                                         orientation="vertical"
                                         getAriaValueText={textPercentage}
                                         valueLabelDisplay="auto"
