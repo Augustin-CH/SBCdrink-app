@@ -2,7 +2,7 @@ import { type IBaseIngredient } from '@features/ingredient/types'
 import { type IIngredientCocktailForm } from './types'
 
 const textPercentage = (value: number): string => {
-  return `${value.toFixed(0)} %`
+  return `${value?.toFixed(0) ?? 0} %`
 }
 
 function textVolume (value: number): string {

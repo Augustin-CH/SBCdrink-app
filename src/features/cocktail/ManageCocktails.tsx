@@ -36,7 +36,7 @@ const ManageCocktails: FC<ManageCocktailsProps> = ({
     } else {
       return (
         <>
-          <ListCocktail cocktails={cocktails} ingredients={ingredients} isEdit />
+          <ListCocktail cocktails={cocktails} ingredients={ingredients} isDashboard />
         </>
       )
     }

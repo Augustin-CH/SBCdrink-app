@@ -3,6 +3,7 @@ import CocktailForm from '@/features/cocktail/cocktailForm/CocktailForm'
 import { type FC } from 'react'
 import { useAppSelector } from '@/app/hooks'
 import { type IBaseIngredient } from '@/features/ingredient/types'
+import { updateCocktail } from '@/features/cocktail/CocktailSlice'
 
 interface EditCocktailProps {
   ingredients: IBaseIngredient[]
@@ -22,8 +23,8 @@ const EditCocktail: FC<EditCocktailProps> = ({
             mode="edit"
             className="edit-cocktail"
             cocktail={selectedCocktail}
-            request={() => {}}
-            title="Edit cocktail"
+            request={updateCocktail}
+            title="Edition d'un cocktail"
             submitText="Modifier"
             notificationSuccess="Cocktail modifié avec succès"
             notificationError="Une erreur est survenue lors de la modification du cocktail"

@@ -37,3 +37,7 @@ export interface IFormatStepMakeCocktail {
   rules: IRules
   cocktail: IBaseCocktail
 }
+
+export interface IUpdateCocktail extends IBaseCocktail {}
+
+export interface ICreateCocktail extends Omit<IBaseCocktail, 'id'> {}

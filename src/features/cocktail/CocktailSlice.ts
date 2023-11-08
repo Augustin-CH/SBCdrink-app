@@ -5,7 +5,8 @@ import {
   type RootState
 } from '@/app/store'
 import {
-  type IBaseCocktail, type IFormatStepMakeCocktail, type IMakeCocktail
+  type IUpdateCocktail, type IBaseCocktail, type IFormatStepMakeCocktail,
+  type IMakeCocktail, type ICreateCocktail
 } from './types'
 import { env } from '@/env'
 import { calculeVolumeIngredient } from './utils'
@@ -91,6 +92,18 @@ export const formatStepMakeCocktail = ({
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (data) => {
   const resp = await client.post(`${env.REACT_APP_API_URL}/api/cocktail/make`, data)
+  return resp.data
+})
+
+export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {
+  const resp = await client.put(`${env.REACT_APP_API_URL}/api/recipes/${data.id}`, { data })
+  dispatch(fetchCocktails())
+  return resp.data
+})
+
+export const createCocktail = createAsyncThunk<IBaseCocktail, ICreateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {
+  const resp = await client.post(`${env.REACT_APP_API_URL}/api/recipes`, { data })
+  dispatch(fetchCocktails())
   return resp.data
 })
 

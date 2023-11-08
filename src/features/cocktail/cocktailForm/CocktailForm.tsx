@@ -17,6 +17,7 @@ import FooterListIngredients from './partials/FooterListIngredients'
 import { calculeVolumeIngredient } from '../utils'
 import GlassVolumeSlider from './partials/GlassVolumeSlider'
 import AlcoholLevel from './partials/AlcoholLevel'
+// import PictureField from './partials/PictureField'
 
 const validationSchema = yup.object({
 
@@ -53,15 +54,28 @@ const CocktailForm: FC<CocktailFormProps> = ({
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
 
   const onSubmit = useCallback(async (values: IFormCocktail, { resetForm }: FormikHelpers<IFormCocktail>): Promise<void> => {
+    const newRecipe: any = { ...values }
+    delete newRecipe.glassVolume
+    delete newRecipe.isAvailable
+    newRecipe.ingredients = newRecipe.ingredients.map((item: any) => {
+      delete item.volume
+      return item
+    })
+
+    // TODO remove for send picture
+    delete newRecipe.picture
+
     if (requestStatus === 'idle') {
       try {
         setRequestStatus('loading')
-        // await dispatch(makeCocktail(stepCocktails)).unwrap()
+        // @ts-ignore
+        await dispatch(request(newRecipe as IBaseCocktail)).unwrap()
         resetForm()
         dispatch(showNotification({
           title: notificationSuccess,
           type: 'success'
         }))
+        onCloseModal()
       } catch (e: AxiosError | any) {
         dispatch(showNotification({
           title: notificationError,
@@ -97,10 +111,12 @@ const CocktailForm: FC<CocktailFormProps> = ({
         <Formik
           initialValues={{
             ...cocktail,
-            ingredients: [...cocktail?.ingredients].map(item => ({
-              ...item,
-              volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, item)
-            })).sort((a, b) => a.order - b.order),
+            ingredients: cocktail?.ingredients
+              ? [...cocktail?.ingredients].map(item => ({
+                  ...item,
+                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, item)
+                })).sort((a, b) => a.order - b.order)
+              : [],
             glassVolume: 50
           } as IFormCocktail}
           validationSchema={validationSchema}
@@ -108,27 +124,30 @@ const CocktailForm: FC<CocktailFormProps> = ({
         >
           {({ values, handleChange, handleBlur }) => (
             <Form>
-              <Grid container mb={3} pt={3}>
-                <TextField
-                  fullWidth
-                  id="name"
-                  name="name"
-                  label="Nom"
-                  value={values.name}
-                  onChange={handleChange}
-                  multiline
-                />
-              </Grid>
-              <Grid container mb={2}>
-                <TextField
-                  fullWidth
-                  id="description"
-                  name="description"
-                  label="Description"
-                  value={values.description}
-                  onChange={handleChange}
-                  multiline
-                />
+              <Grid container>
+                {/* <PictureField /> */}
+                <Grid container mb={3} pt={3}>
+                  <TextField
+                    fullWidth
+                    id="name"
+                    name="name"
+                    label="Nom"
+                    value={values.name}
+                    onChange={handleChange}
+                    multiline
+                  />
+                </Grid>
+                <Grid container mb={2}>
+                  <TextField
+                    fullWidth
+                    id="description"
+                    name="description"
+                    label="Description"
+                    value={values.description}
+                    onChange={handleChange}
+                    multiline
+                  />
+                </Grid>
               </Grid>
 
               <GlassVolumeSlider />

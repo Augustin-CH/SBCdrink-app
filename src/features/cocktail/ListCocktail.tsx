@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Button, Grid } from '@mui/material'
 import { BlogPostCard } from '@/features/ui/card'
 import { type IBaseCocktail } from '@features/cocktail/types'
 import { type FC, useState } from 'react'
 import { env } from '@/env'
-import { EditCocktail, ViewCocktail } from '@/features/cocktail'
+import { AddCocktail, EditCocktail, ViewCocktail } from '@/features/cocktail'
 import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
 import { type ICardData } from '@/features/ui/card/types'
@@ -13,20 +13,24 @@ import { type IBaseIngredient } from '@/features/ingredient/types'
 interface ListCocktailProps {
   cocktails: IBaseCocktail[]
   ingredients?: IBaseIngredient[]
-  isEdit?: boolean
+  isDashboard?: boolean
 }
 
 const ListCocktail: FC<ListCocktailProps> = ({
   cocktails,
   ingredients,
-  isEdit
+  isDashboard
 }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [modalMode, setModalMode] = useState('edit')
+
   const dispatch = useAppDispatch()
 
-  const handleModal = () => { setIsOpen(!isOpen) }
+  const handleModal = useCallback(() => {
+    setIsOpen(!isOpen)
+  }, [isOpen])
 
-  const formatCocktailList = (items: IBaseCocktail[]): ICardData[] => {
+  const formatCocktailList = useCallback((items: IBaseCocktail[]): ICardData[] => {
     return items?.map((cocktail, index) => ({
       id: cocktail.id,
       cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
@@ -34,9 +38,36 @@ const ListCocktail: FC<ListCocktailProps> = ({
       subTitle: cocktail.ingredients.map((ingredient) => ingredient.name).join(', '),
       description: cocktail.description
     }))
-  }
+  }, [cocktails])
 
-  const cocktailsList = formatCocktailList(cocktails)
+  const cocktailsList = useMemo(() => formatCocktailList(cocktails), [cocktails])
+
+  const renderModal = useMemo(() => {
+    if (isOpen) {
+      if (isDashboard && ingredients) {
+        if (modalMode === 'edit') {
+          return (
+            <EditCocktail
+              ingredients={ingredients}
+              isModalOpen={isOpen}
+              onCloseModal={handleModal}
+            />)
+        } else if (modalMode === 'add') {
+          return (
+            <AddCocktail
+              ingredients={ingredients}
+              isModalOpen={isOpen}
+              onCloseModal={handleModal}
+            />)
+        }
+      }
+      return (
+        <ViewCocktail
+          isModalOpen={isOpen}
+          onCloseModal={handleModal}
+        />)
+    }
+  }, [isOpen, isDashboard, ingredients])
 
   return (
         <>
@@ -51,6 +82,11 @@ const ListCocktail: FC<ListCocktailProps> = ({
               mb: 3,
               mr: 2
             }}
+            onClick={() => {
+              dispatch(setSelectedCocktail({} as IBaseCocktail))
+              setModalMode('add')
+              handleModal()
+            }}
           >
             Ajouter
           </Button>
@@ -59,23 +95,12 @@ const ListCocktail: FC<ListCocktailProps> = ({
             {cocktailsList?.map((item: ICardData, index: number) => (
               <BlogPostCard key={item.id} data={item} index={index} onClick={() => {
                 dispatch(setSelectedCocktail(cocktails[index]))
+                setModalMode('edit')
                 handleModal()
               }}/>
             ))}
           </Grid>
-          {
-          isEdit && ingredients && isOpen
-            ? (
-              <EditCocktail
-                ingredients={ingredients}
-                isModalOpen={isOpen}
-                onCloseModal={handleModal}
-              />)
-            : (
-              <ViewCocktail
-                isModalOpen={isOpen}
-                onCloseModal={handleModal}
-              />)}
+          {renderModal}
         </>
   )
 }
