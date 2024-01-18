@@ -33,9 +33,9 @@ const ListCocktail: FC<ListCocktailProps> = ({
   const formatCocktailList = useCallback((items: IBaseCocktail[]): ICardData[] => {
     return items?.map((cocktail, index) => ({
       id: cocktail.id,
-      cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
+      cover: `${env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/${cocktail.picture}`,
       title: cocktail.name,
-      subTitle: cocktail.ingredients.map((ingredient) => ingredient.name).join(', '),
+      subTitle: cocktail.ingredients?.map((ingredient) => ingredient.name).join(', '),
       description: cocktail.description
     }))
   }, [cocktails])

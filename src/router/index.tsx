@@ -10,7 +10,6 @@ import Home from '@/pages/Home'
 import Bottle from '@/pages/dashboard/Bottle'
 import Cocktail from '@/pages/dashboard/Cocktail'
 
-
 export interface RouteConstants {
   element: any
   path?: string

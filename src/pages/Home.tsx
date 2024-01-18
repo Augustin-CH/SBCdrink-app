@@ -1,8 +1,7 @@
-import React, { type FC, useContext, useEffect } from 'react'
+import React, { type FC, useContext } from 'react'
 import { Button, Container, Stack, Typography, useTheme } from '@mui/material'
 import { ListCocktail } from '@/features/cocktail'
-import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { fetchAvailableCocktails } from '@/features/cocktail/CocktailSlice'
+import { useAppSelector } from '@/app/hooks'
 import { TextNeon } from '@/features/ui/components/TextNeon/TextNeon'
 import { SwitchTheme } from '@/features/ui/components/SwitchTheme/SwitchTheme'
 import { ColorModeContext } from '@/assets/theme'
@@ -13,14 +12,9 @@ import paths from '@/router/paths'
 const Home: FC = () => {
   const { setMode } = useContext(ColorModeContext)
   const theme = useTheme()
-  const dispatch = useAppDispatch()
   const { listCocktails, listCocktailsStatus } = useAppSelector(state => state.cocktail)
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    dispatch(fetchAvailableCocktails())
-  }, [dispatch])
 
   if (listCocktailsStatus === 'failed') {
     return (
