@@ -77,7 +77,7 @@ export const listenCocktails = createAsyncThunk<unknown, undefined, { state: Roo
   dispatch(internalActions.setListCocktails([]))
   unsubscribeCocktails()
 
-  const changes = supabase
+  supabase
     .channel('table-db-changes')
     .on(
       'postgres_changes',
@@ -91,6 +91,7 @@ export const listenCocktails = createAsyncThunk<unknown, undefined, { state: Roo
 
         const { listCocktails } = getState().cocktail
         const newListCoctails = [...listCocktails]
+        // @ts-expect-error bad typing payload
         const index = newListCoctails.findIndex((cocktail) => cocktail.id === payload.old.id)
 
         switch (payload.eventType) {
