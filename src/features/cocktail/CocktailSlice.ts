@@ -150,7 +150,7 @@ export const formatStepMakeCocktail = ({
   const { glassVolume, alcoholLevel } = rules
   const { ingredients } = cocktail
 
-  return ingredients.map((ingredient) => {
+  return ingredients?.map((ingredient) => {
     return {
       order: ingredient.order,
       ingredient: ingredient.id,
