@@ -37,29 +37,6 @@ const BlogPostCard: FC<BlogPostCardProps> = ({ data, index, onClick }) => {
           </Typography>
         </Box>
       </Card>
-
-      {/* <Card sx={{ display: 'inline-block', height: 230, padding: 2 }}>
-        <Box
-          sx={{ height: 200, width: 120, overflow: 'hidden', display: 'inline-block' }}>
-          <CardMedia
-              component="img"
-              sx={{ maxHeight: 200, marginLeft: 'auto', marginRight: 'auto', width: 'auto', overflow: 'hidden' }}
-              image={cover}
-              alt="Live from space album cover"
-          />
-        </Box>
-        <Box sx={{ display: 'inline-block' }}>
-          <Typography component="div" variant="h5" paddingBottom={1}>
-            <TextNeon text={title?.toUpperCase() ?? ''} type={1} style={{ fontSize: 25 }} />
-          </Typography>
-          <Typography component="div" variant="subtitle1" paddingBottom={1}>
-            {subTitle}
-          </Typography>
-          <Typography component="div">
-            {description}
-          </Typography>
-        </Box>
-      </Card> */}
     </Grid>
   )
 }
