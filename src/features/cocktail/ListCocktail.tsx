@@ -40,7 +40,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
       subTitle: cocktail.recipeIngredients?.map(({ ingredient }) => ingredient.name).join(', '),
       description: cocktail.description
     }))
-  }, [cocktails])
+  }, [populateSelectedCocktail])
 
   const renderModal = useMemo(() => {
     if (isOpen) {
