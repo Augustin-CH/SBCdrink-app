@@ -82,11 +82,11 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "machine_configuration_ingredient_fkey"
-            columns: ["ingredient"]
+            foreignKeyName: 'machine_configuration_ingredient_fkey'
+            columns: ['ingredient']
             isOneToOne: false
-            referencedRelation: "ingredient"
-            referencedColumns: ["id"]
+            referencedRelation: 'ingredient'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -97,7 +97,7 @@ export interface Database {
           id: number
           progress: number
           recipe_name: string
-          status: Database["public"]["Enums"]["status"]
+          status: Database['public']['Enums']['status']
         }
         Insert: {
           alcohol_level?: number
@@ -105,7 +105,7 @@ export interface Database {
           id?: number
           progress?: number
           recipe_name: string
-          status?: Database["public"]["Enums"]["status"]
+          status?: Database['public']['Enums']['status']
         }
         Update: {
           alcohol_level?: number
@@ -113,7 +113,7 @@ export interface Database {
           id?: number
           progress?: number
           recipe_name?: string
-          status?: Database["public"]["Enums"]["status"]
+          status?: Database['public']['Enums']['status']
         }
         Relationships: []
       }
@@ -125,6 +125,8 @@ export interface Database {
           ingredient_is_alcohol: boolean
           ingredient_name: string
           order: number
+          quantity: number
+          status: Database['public']['Enums']['status']
         }
         Insert: {
           created_at?: string
@@ -133,6 +135,8 @@ export interface Database {
           ingredient_is_alcohol: boolean
           ingredient_name: string
           order: number
+          quantity: number
+          status?: Database['public']['Enums']['status']
         }
         Update: {
           created_at?: string
@@ -141,14 +145,16 @@ export interface Database {
           ingredient_is_alcohol?: boolean
           ingredient_name?: string
           order?: number
+          quantity?: number
+          status?: Database['public']['Enums']['status']
         }
         Relationships: [
           {
-            foreignKeyName: "order_ingredient_step_order_fkey"
-            columns: ["order"]
+            foreignKeyName: 'order_ingredient_step_order_fkey'
+            columns: ['order']
             isOneToOne: false
-            referencedRelation: "order"
-            referencedColumns: ["id"]
+            referencedRelation: 'order'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -195,32 +201,38 @@ export interface Database {
         Row: {
           id: number
           ingredient: number
+          order_index: number
+          proportion: number
           recipe: number
         }
         Insert: {
           id?: number
           ingredient: number
+          order_index: number
+          proportion: number
           recipe: number
         }
         Update: {
           id?: number
           ingredient?: number
+          order_index?: number
+          proportion?: number
           recipe?: number
         }
         Relationships: [
           {
-            foreignKeyName: "recipe_ingredient_ingredient_fkey"
-            columns: ["ingredient"]
+            foreignKeyName: 'recipe_ingredient_ingredient_fkey'
+            columns: ['ingredient']
             isOneToOne: false
-            referencedRelation: "ingredient"
-            referencedColumns: ["id"]
+            referencedRelation: 'ingredient'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "recipe_ingredient_recipe_fkey"
-            columns: ["recipe"]
+            foreignKeyName: 'recipe_ingredient_recipe_fkey'
+            columns: ['recipe']
             isOneToOne: false
-            referencedRelation: "recipe"
-            referencedColumns: ["id"]
+            referencedRelation: 'recipe'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -229,10 +241,20 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      insert_order_and_step: {
+        Args: {
+          p_recipe_name: string
+          p_alcohol_level: number
+          p_steps: Json
+        }
+        Returns: Array<{
+          order_id: number
+          step_ids: number[]
+        }>
+      }
     }
     Enums: {
-      status: "created" | "in_progress" | "done"
+      status: 'created' | 'in_progress' | 'done' | 'canceled'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -342,11 +364,11 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "objects_bucketId_fkey"
-            columns: ["bucket_id"]
+            foreignKeyName: 'objects_bucketId_fkey'
+            columns: ['bucket_id']
             isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
+            referencedRelation: 'buckets'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -384,10 +406,10 @@ export interface Database {
       }
       get_size_by_bucket: {
         Args: Record<PropertyKey, never>
-        Returns: {
+        Returns: Array<{
           size: number
           bucket_id: string
-        }[]
+        }>
       }
       search: {
         Args: {
@@ -400,14 +422,14 @@ export interface Database {
           sortcolumn?: string
           sortorder?: string
         }
-        Returns: {
+        Returns: Array<{
           name: string
           id: string
           updated_at: string
           created_at: string
           last_accessed_at: string
           metadata: Json
-        }[]
+        }>
       }
     }
     Enums: {
@@ -421,81 +443,80 @@ export interface Database {
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
-    | { schema: keyof Database },
+  | keyof (Database['public']['Tables'] & Database['public']['Views'])
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+    Database[PublicTableNameOrOptions['schema']]['Views'])
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+    Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
-    ? R
+      ? R
+      : never
+  : PublicTableNameOrOptions extends keyof (Database['public']['Tables'] &
+  Database['public']['Views'])
+    ? (Database['public']['Tables'] &
+      Database['public']['Views'])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+        ? R
+        : never
     : never
-  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
-      Database["public"]["Views"])
-  ? (Database["public"]["Tables"] &
-      Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
-    : never
-  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
-    | { schema: keyof Database },
+  | keyof Database['public']['Tables']
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+    Insert: infer I
+  }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
       Insert: infer I
     }
-    ? I
+      ? I
+      : never
     : never
-  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
-    | { schema: keyof Database },
+  | keyof Database['public']['Tables']
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+    Update: infer U
+  }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof Database['public']['Tables']
+    ? Database['public']['Tables'][PublicTableNameOrOptions] extends {
       Update: infer U
     }
-    ? U
+      ? U
+      : never
     : never
-  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof Database["public"]["Enums"]
-    | { schema: keyof Database },
+  | keyof Database['public']['Enums']
+  | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
     : never = never
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
-  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-  : never
-
+  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database['public']['Enums']
+    ? Database['public']['Enums'][PublicEnumNameOrOptions]
+    : never

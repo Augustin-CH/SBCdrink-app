@@ -17,6 +17,7 @@ import FooterListIngredients from './partials/FooterListIngredients'
 import { calculeVolumeIngredient } from '../utils'
 import GlassVolumeSlider from './partials/GlassVolumeSlider'
 import AlcoholLevel from './partials/AlcoholLevel'
+import { populate } from '../CocktailSlice'
 // import PictureField from './partials/PictureField'
 
 const validationSchema = yup.object({
@@ -52,6 +53,8 @@ const CocktailForm: FC<CocktailFormProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
+
+  const populateSelectedCocktail = populate([cocktail])[0]
 
   const onSubmit = useCallback(async (values: IFormCocktail, { resetForm }: FormikHelpers<IFormCocktail>): Promise<void> => {
     const newRecipe: any = { ...values }
@@ -111,11 +114,12 @@ const CocktailForm: FC<CocktailFormProps> = ({
         <Formik
           initialValues={{
             ...cocktail,
-            ingredients: cocktail?.ingredients
-              ? [...cocktail?.ingredients].map(item => ({
-                  ...item,
-                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, item)
-                })).sort((a, b) => a.order - b.order)
+            ingredients: populateSelectedCocktail?.recipeIngredients
+              ? [...populateSelectedCocktail?.recipeIngredients].map(({ proportion, orderIndex, ingredient }) => ({
+                  ...ingredient,
+                  orderIndex,
+                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
+                })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
             glassVolume: 50
           } as IFormCocktail}

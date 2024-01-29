@@ -4,13 +4,15 @@ import cocktailReducer from '@/features/cocktail/CocktailSlice'
 import notificationReducer from '@/features/notification/notificationSlice'
 import bottleReducer from '@/features/bottle/BottleSlice'
 import ingredientReducer from '@/features/ingredient/IngredientSlice'
+import recipeIngredientReducer from '@/features/recipeIngredient/RecipeIngredientSlice'
 
 export const store = configureStore({
   reducer: {
     bottle: bottleReducer,
     cocktail: cocktailReducer,
     ingredient: ingredientReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
+    recipeIngredient: recipeIngredientReducer
   },
   devTools: env.REACT_APP_ENVIRONMENT === 'development'
 })

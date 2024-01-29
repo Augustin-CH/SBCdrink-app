@@ -1,20 +1,55 @@
-import React, { type FC, useContext } from 'react'
+import React, { type FC, useContext, useMemo, useEffect } from 'react'
 import { Button, Container, Stack, Typography, useTheme } from '@mui/material'
 import { ListCocktail } from '@/features/cocktail'
-import { useAppSelector } from '@/app/hooks'
+import { useAppSelector, useAppDispatch } from '@/app/hooks'
 import { TextNeon } from '@/features/ui/components/TextNeon/TextNeon'
 import { SwitchTheme } from '@/features/ui/components/SwitchTheme/SwitchTheme'
 import { ColorModeContext } from '@/assets/theme'
 import Loader from '@/features/ui/loader/loader'
 import { useNavigate } from 'react-router-dom'
 import paths from '@/router/paths'
+import { listenCocktails } from '@/features/cocktail/CocktailSlice'
+import { unsubscribeCocktails, unsubscribeIngredients, unsubscribeRecipeIngredients } from '@/lib/supabase/supabase'
+import { listenIngredients } from '@/features/ingredient/IngredientSlice'
+import { listenRecipeIngredients } from '@/features/recipeIngredient/RecipeIngredientSlice'
 
 const Home: FC = () => {
   const { setMode } = useContext(ColorModeContext)
   const theme = useTheme()
-  const { listCocktails, listCocktailsStatus } = useAppSelector(state => state.cocktail)
 
   const navigate = useNavigate()
+
+  const dispatch = useAppDispatch()
+
+  const { listCocktails, listCocktailsStatus } = useAppSelector(state => state.cocktail)
+  const { listRecipeIngredients } = useAppSelector(state => state.recipeIngredient)
+
+  const listCocktailIds = useMemo(() => [...new Set(listCocktails.map((cocktail) => cocktail.id))], [listCocktails])
+  const listIngredientIds = useMemo(() => [...new Set(listRecipeIngredients.map((recipeIngredient) => recipeIngredient.ingredient))], [listRecipeIngredients])
+
+  useEffect(() => {
+    dispatch(listenCocktails())
+
+    return () => {
+      unsubscribeCocktails()
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    listCocktailIds.length && dispatch(listenRecipeIngredients(listCocktailIds))
+
+    return () => {
+      unsubscribeRecipeIngredients()
+    }
+  }, [dispatch, listCocktailIds])
+
+  useEffect(() => {
+    listIngredientIds.length && dispatch(listenIngredients(listIngredientIds))
+
+    return () => {
+      unsubscribeIngredients()
+    }
+  }, [dispatch, listIngredientIds])
 
   if (listCocktailsStatus === 'failed') {
     return (

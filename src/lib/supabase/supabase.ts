@@ -19,3 +19,25 @@ export const unsubscribeCocktails = () => {
     unsubscribeCocktailsFunc = null
   }
 }
+
+let unsubscribeIngredientsFunc: RealtimeChannel | null = null
+export const setUnsubscribeIngredients = (unsubscribeFn: RealtimeChannel) => {
+  unsubscribeIngredientsFunc = unsubscribeFn
+}
+export const unsubscribeIngredients = () => {
+  if (unsubscribeIngredientsFunc) {
+    unsubscribeIngredientsFunc.unsubscribe()
+    unsubscribeIngredientsFunc = null
+  }
+}
+
+let unsubscribeRecipeIngredientsFunc: RealtimeChannel | null = null
+export const setUnsubscribeRecipeIngredients = (unsubscribeFn: RealtimeChannel) => {
+  unsubscribeRecipeIngredientsFunc = unsubscribeFn
+}
+export const unsubscribeRecipeIngredients = () => {
+  if (unsubscribeRecipeIngredientsFunc) {
+    unsubscribeRecipeIngredientsFunc.unsubscribe()
+    unsubscribeRecipeIngredientsFunc = null
+  }
+}

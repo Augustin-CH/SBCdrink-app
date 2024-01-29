@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import ManageCocktails from '@/features/cocktail/ManageCocktails'
 import { fetchCocktails } from '@/features/cocktail/CocktailSlice'
@@ -10,10 +10,12 @@ const Cocktail: FC = () => {
 
   const { listCocktails, listCocktailsStatus } = useAppSelector(state => state.cocktail)
   const { listIngredients, listIngredientsStatus } = useAppSelector(state => state.ingredient)
+  const { listRecipeIngredients } = useAppSelector(state => state.recipeIngredient)
+  const listIngredientIds = useMemo(() => [...new Set(listRecipeIngredients.map((recipeIngredient) => recipeIngredient.ingredient))], [listRecipeIngredients])
 
   const fetchData = useCallback(() => {
     dispatch(fetchCocktails())
-    dispatch(fetchIngredients())
+    dispatch(fetchIngredients(listIngredientIds))
   }, [dispatch])
 
   useEffect(() => {

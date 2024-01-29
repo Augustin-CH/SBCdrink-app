@@ -13,7 +13,7 @@ const OrderColumn: FC<OrderColumnProps> = ({
   const formik = useFormikContext<IFormCocktail>()
 
   const handleChangeOrder = (value: number, index: number) => {
-    formik.setFieldValue(`ingredients[${index}].order`, value)
+    formik.setFieldValue(`ingredients[${index}].orderIndex`, value)
   }
 
   return (
@@ -22,7 +22,7 @@ const OrderColumn: FC<OrderColumnProps> = ({
       <Select
         labelId={`ingredient[${index}].id`}
         id="select"
-        value={formik.values.ingredients[index].order}
+        value={formik.values.ingredients[index].orderIndex}
         label="Ordre"
         name={`ingredient[${index}].id`}
         onChange={(e) => handleChangeOrder(+e.target.value, index)}

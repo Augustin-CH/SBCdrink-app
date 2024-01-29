@@ -7,7 +7,7 @@ import { type IMakeCocktail, type IRules } from '@/features/cocktail/types'
 import { AxiosError } from 'axios'
 import * as yup from 'yup'
 import { type FetchStatus } from '@/app/shared/types'
-import { formatStepMakeCocktail, makeCocktail } from '@/features/cocktail/CocktailSlice'
+import { formatStepMakeCocktail, makeCocktail, populate } from '@/features/cocktail/CocktailSlice'
 import { showNotification } from '@/features/notification/notificationSlice'
 import CloseIcon from '@mui/icons-material/Close'
 import { BoxModal } from '@/features/ui/components/BoxModal/BoxModal'
@@ -28,18 +28,24 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
-  const [stepCocktails, setStepCocktails] = useState<IMakeCocktail>([] as IMakeCocktail)
+  const [stepCocktails, setStepCocktails] = useState<IMakeCocktail>()
 
   const { selectedCocktail } = useAppSelector(state => state.cocktail)
+  const populateSelectedCocktail = populate([selectedCocktail])[0]
 
-  const ingredientText: string[] = selectedCocktail?.ingredients?.map((item, index) => {
-    const ingredientIndex = stepCocktails.findIndex((step) => step.ingredient === item.id)
-    const quantity = stepCocktails[ingredientIndex]?.quantity.toFixed(1)
-    return `${index !== 0 ? ' ' : ''}${item?.name} (${quantity} cl)`
+  console.log('populateSelectedCocktail', populateSelectedCocktail)
+
+  const ingredientText: string[] = populateSelectedCocktail?.recipeIngredients?.map((item, index) => {
+    if (!stepCocktails) return ''
+    console.log('stepCocktails', stepCocktails, item)
+    const ingredientIndex = stepCocktails.steps.findIndex((step) => step.ingredientId === item.ingredient.id)
+    const quantity = stepCocktails.steps[ingredientIndex]?.quantity.toFixed(1)
+    return `${index !== 0 ? ' ' : ''}${item.ingredient.name} (${quantity} cl)`
   })
 
   const onValidate = (values: any) => {
-    setStepCocktails(formatStepMakeCocktail({ rules: values, cocktail: selectedCocktail }))
+    console.log('values', values)
+    setStepCocktails(formatStepMakeCocktail({ rules: values, cocktail: populateSelectedCocktail }))
   }
 
   const onSubmit = async (values: IRules, { resetForm }: FormikHelpers<IRules>): Promise<void> => {
@@ -47,15 +53,19 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
       try {
         setRequestStatus('loading')
 
-        await dispatch(makeCocktail(stepCocktails)).unwrap()
+        stepCocktails && await dispatch(makeCocktail(stepCocktails)).unwrap()
         resetForm()
         dispatch(showNotification({
           title: 'Demande de cocktail envoyée avec succès',
           type: 'success'
         }))
       } catch (e: AxiosError | any) {
+        console.log('error', e)
+        const title = e.message === 'There are unfinished orders. Unable to proceed.'
+          ? 'Il y a des commandes en cours. Impossible de procéder.'
+          : "Une erreur est survenue lors de l'envoi de la demande de cocktail"
         dispatch(showNotification({
-          title: "Une erreur est survenue lors de l'envoi de la demande de cocktail",
+          title,
           type: 'error'
         }))
       } finally {

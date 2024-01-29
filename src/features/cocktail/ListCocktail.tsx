@@ -5,7 +5,7 @@ import { type IBaseCocktail } from '@features/cocktail/types'
 import { type FC, useState } from 'react'
 import { env } from '@/env'
 import { AddCocktail, EditCocktail, ViewCocktail } from '@/features/cocktail'
-import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
+import { populate, setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
 import { type ICardData } from '@/features/ui/card/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
@@ -26,21 +26,21 @@ const ListCocktail: FC<ListCocktailProps> = ({
 
   const dispatch = useAppDispatch()
 
+  const populateSelectedCocktail = populate(cocktails)
+
   const handleModal = useCallback(() => {
     setIsOpen(!isOpen)
   }, [isOpen])
 
-  const formatCocktailList = useCallback((items: IBaseCocktail[]): ICardData[] => {
-    return items?.map((cocktail, index) => ({
+  const cocktailsList = useMemo((): ICardData[] => {
+    return populateSelectedCocktail?.map((cocktail) => ({
       id: cocktail.id,
       cover: `${env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/${cocktail.picture}`,
       title: cocktail.name,
-      subTitle: cocktail.ingredients?.map((ingredient) => ingredient.name).join(', '),
+      subTitle: cocktail.recipeIngredients?.map(({ ingredient }) => ingredient.name).join(', '),
       description: cocktail.description
     }))
   }, [cocktails])
-
-  const cocktailsList = useMemo(() => formatCocktailList(cocktails), [cocktails])
 
   const renderModal = useMemo(() => {
     if (isOpen) {

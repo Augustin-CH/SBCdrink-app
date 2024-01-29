@@ -1,4 +1,5 @@
 import { type IBaseIngredient } from '@/features/ingredient/types'
+import { type IBaseRecipeIngredient } from '@/features/recipeIngredient/types'
 
 export interface IBaseCocktail {
   id: number
@@ -8,25 +9,42 @@ export interface IBaseCocktail {
   alcoholMaxLevel: number
   alcoholMinLevel: number
   picture: string
-  ingredients: IBaseIngredient[]
+  isAvailable: boolean
+}
+
+export interface IPopulateRecipeIngredient extends Omit<IBaseRecipeIngredient, 'ingredient'> {
+  ingredient: IBaseIngredient
+}
+
+export interface IPopulateCocktail extends IBaseCocktail {
+  recipeIngredients: IPopulateRecipeIngredient[]
 }
 
 export interface IIngredientCocktailForm extends IBaseIngredient {
+  orderIndex: number
   volume: number
 }
 
-export interface IFormCocktail extends IBaseCocktail {
+export interface IFormCocktail extends Omit<IBaseCocktail, 'ingredients'> {
   glassVolume: number
   ingredients: IIngredientCocktailForm[]
 }
 
 export interface IStepMakeCocktail {
   order: number
-  ingredient: number
+  ingredientId: number
+  ingredientName: string
+  ingredientIsAlcohol: boolean
+  ingredientAlcoholDegree: number
   quantity: number
 }
 
-export interface IMakeCocktail extends Array<IStepMakeCocktail> {}
+export interface IMakeCocktail {
+  recipeId: number
+  recipeName: string
+  alcoholLevel: number
+  steps: IStepMakeCocktail[]
+}
 
 export interface IRules {
   glassVolume: number
@@ -35,7 +53,7 @@ export interface IRules {
 
 export interface IFormatStepMakeCocktail {
   rules: IRules
-  cocktail: IBaseCocktail
+  cocktail: IPopulateCocktail
 }
 
 export interface IUpdateCocktail extends IBaseCocktail {}
