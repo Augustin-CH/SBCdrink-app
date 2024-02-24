@@ -4,7 +4,6 @@ import {
   type RootState
 } from '@/app/store'
 import { type IFetchIngredients, type IBaseIngredient } from '@/features/ingredient/types'
-import supabase, { setUnsubscribeIngredients, unsubscribeIngredients } from '@/lib/supabase/supabase'
 
 export interface IngredientState {
   listIngredients: IBaseIngredient[]
@@ -58,69 +57,18 @@ export const serializeIngredient = (ingredient: any): IBaseIngredient => {
   }
 }
 
-export const listenIngredients = createAsyncThunk<unknown, IFetchIngredients, { state: RootState }>('ingredient/listenIngredients', async (ingredientIds, { getState, dispatch }) => {
-  dispatch(internalActions.setListIngredients([]))
-  dispatch(fetchIngredients(ingredientIds))
-  dispatch(internalActions.setListStatus('loading'))
-  unsubscribeIngredients()
-
-  const channel = supabase
-    .channel('ingredient-table-db-changes')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'ingredient',
-        filter: `id.in.${ingredientIds.join(',')}`
-      },
-      (payload) => {
-        console.log('ingredient', payload)
-        dispatch(internalActions.setListStatus('succeeded'))
-
-        const { listIngredients } = getState().ingredient
-        const newListIngredients = [...listIngredients]
-        // @ts-expect-error bad typing payload
-        const index = newListIngredients.findIndex((ingredient) => ingredient.id === payload.old.id)
-        const ingredient = serializeIngredient(payload.new)
-
-        switch (payload.eventType) {
-          case 'INSERT':
-            if (payload.new.is_available) newListIngredients.push(ingredient)
-            break
-          case 'UPDATE':
-            if (index === -1) {
-              newListIngredients.push(ingredient)
-            } else {
-              newListIngredients[index] = ingredient
-            }
-            break
-          case 'DELETE':
-            newListIngredients.splice(index, 1)
-            break
-          default:
-            break
-        }
-
-        dispatch(internalActions.setListIngredients(newListIngredients))
-      }
-    )
-    .subscribe()
-
-  setUnsubscribeIngredients(channel)
-})
-
 export const fetchIngredients = createAsyncThunk<IBaseIngredient[], IFetchIngredients, { state: RootState }>('ingredient/fetchIngredients', async (ingredientIds) => {
-  const { data, error } = await supabase
-    .from('ingredient')
-    .select('*')
-    .in('id', ingredientIds)
+  // const { data, error } = await supabase
+  //   .from('ingredient')
+  //   .select('*')
+  //   .in('id', ingredientIds)
 
-  if (error) {
-    throw new Error(error.message)
-  }
+  // if (error) {
+  //   throw new Error(error.message)
+  // }
 
-  return data.map(serializeIngredient)
+  // return data.map(serializeIngredient)
+  return []
 })
 
 const internalActions = ingredientSlice.actions

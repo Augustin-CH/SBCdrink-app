@@ -10,7 +10,5 @@ interface EnvType {
   REACT_APP_ENVIRONMENT: string
   REACT_APP_WEBSITE_DOMAIN: string
   REACT_APP_API_URL: string
-  REACT_APP_SUPABASE_URL: string
-  REACT_APP_SUPABASE_ANON_KEY: string
 }
 export const env: EnvType = { ...process.env, ...window?.env }

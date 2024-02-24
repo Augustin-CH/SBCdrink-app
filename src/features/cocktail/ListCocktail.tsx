@@ -3,7 +3,6 @@ import { Button, Grid } from '@mui/material'
 import { BlogPostCard } from '@/features/ui/card'
 import { type IBaseCocktail } from '@features/cocktail/types'
 import { type FC, useState } from 'react'
-import { env } from '@/env'
 import { AddCocktail, EditCocktail, ViewCocktail } from '@/features/cocktail'
 import { populate, setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
@@ -35,7 +34,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
   const cocktailsList = useMemo((): ICardData[] => {
     return populateSelectedCocktail?.map((cocktail) => ({
       id: cocktail.id,
-      cover: `${env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/${cocktail.picture}`,
+      cover: `${'env.REACT_APP_SUPABASE_URL'}/storage/v1/object/public/${cocktail.picture}`,
       title: cocktail.name,
       subTitle: cocktail.recipeIngredients?.map(({ ingredient }) => ingredient.name).join(', '),
       description: cocktail.description

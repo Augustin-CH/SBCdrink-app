@@ -10,7 +10,6 @@ import {
 } from './types'
 import { env } from '@/env'
 import { calculeVolumeIngredient } from './utils'
-import supabase, { setUnsubscribeCocktails, unsubscribeCocktails } from '@/lib/supabase/supabase'
 import { useAppSelector } from '@/app/hooks'
 
 const client = ApiClient.Instance()
@@ -83,72 +82,18 @@ export const serializeCocktail = (cocktail: any): IBaseCocktail => ({
   isAvailable: cocktail.is_available
 })
 
-export const listenCocktails = createAsyncThunk<unknown, undefined, { state: RootState }>('cocktail/listenCocktails', async (_, { getState, dispatch }) => {
-  dispatch(internalActions.setListCocktails([]))
-  dispatch(fetchAvailableCocktails())
-  dispatch(internalActions.setListStatus('loading'))
-  unsubscribeCocktails()
-
-  const channel = supabase
-    .channel('recipe-table-db-changes')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'recipe'
-      },
-      (payload) => {
-        console.log('ici', payload)
-        dispatch(internalActions.setListStatus('succeeded'))
-
-        const { listCocktails } = getState().cocktail
-        const newListCoctails = [...listCocktails]
-        // @ts-expect-error bad typing payload
-        const index = newListCoctails.findIndex((cocktail) => cocktail.id === payload.old.id)
-        const cocktail = serializeCocktail(payload.new)
-
-        switch (payload.eventType) {
-          case 'INSERT':
-            if (payload.new.is_available) newListCoctails.push(cocktail)
-            break
-          case 'UPDATE':
-            if (cocktail.isAvailable) {
-              if (index === -1) {
-                newListCoctails.push(cocktail)
-              } else {
-                newListCoctails[index] = cocktail
-              }
-            } else {
-              newListCoctails.splice(index, 1)
-            }
-            break
-          case 'DELETE':
-            newListCoctails.splice(index, 1)
-            break
-          default:
-            break
-        }
-
-        dispatch(internalActions.setListCocktails(newListCoctails))
-      }
-    )
-    .subscribe()
-
-  setUnsubscribeCocktails(channel)
-})
-
 export const fetchAvailableCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
-  const { data, error } = await supabase
-    .from('recipe')
-    .select('*, recipe_ingredients:recipe_ingredient(*)')
-    .eq('is_available', true)
+  // const { data, error } = await supabase
+  //   .from('recipe')
+  //   .select('*, recipe_ingredients:recipe_ingredient(*)')
+  //   .eq('is_available', true)
 
-  if (error) {
-    throw new Error(error.message)
-  }
+  // if (error) {
+  //   throw new Error(error.message)
+  // }
 
-  return data.map(serializeCocktail)
+  // return data.map(serializeCocktail)
+  return []
 })
 
 export const fetchCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
@@ -199,26 +144,25 @@ export const formatStepMakeCocktail = ({
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (orderData) => {
-  console.log(orderData)
+  // const { data, error } = await supabase
+  //   .rpc('insert_order_and_step', {
+  //     p_recipe_name: orderData.recipeName,
+  //     p_alcohol_level: orderData.alcoholLevel,
+  //     p_steps: orderData.steps?.map((step) => ({
+  //       ingredient_name: step.ingredientName,
+  //       ingredient_is_alcohol: step.ingredientIsAlcohol,
+  //       ingredient_alcohol_degree: step.ingredientAlcoholDegree,
+  //       quantity: step.quantity
+  //     }))
+  //   })
+  // console.log(data, error)
 
-  const { data, error } = await supabase
-    .rpc('insert_order_and_step', {
-      p_recipe_name: orderData.recipeName,
-      p_alcohol_level: orderData.alcoholLevel,
-      p_steps: orderData.steps?.map((step) => ({
-        ingredient_name: step.ingredientName,
-        ingredient_is_alcohol: step.ingredientIsAlcohol,
-        ingredient_alcohol_degree: step.ingredientAlcoholDegree,
-        quantity: step.quantity
-      }))
-    })
-  console.log(data, error)
+  // if (error) {
+  //   throw new Error(error.message)
+  // }
 
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data as unknown as null
+  // return data as unknown as null
+  return null
 })
 
 export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {
