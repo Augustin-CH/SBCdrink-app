@@ -71,29 +71,9 @@ export const cocktailSlice = createSlice({
   }
 })
 
-export const serializeCocktail = (cocktail: any): IBaseCocktail => ({
-  id: cocktail.id,
-  name: cocktail.name,
-  description: cocktail.description,
-  alcoholLevel: cocktail.alcohol_level,
-  alcoholMaxLevel: cocktail.alcohol_max_level,
-  alcoholMinLevel: cocktail.alcohol_min_level,
-  picture: cocktail.picture,
-  isAvailable: cocktail.is_available
-})
-
 export const fetchAvailableCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
-  // const { data, error } = await supabase
-  //   .from('recipe')
-  //   .select('*, recipe_ingredients:recipe_ingredient(*)')
-  //   .eq('is_available', true)
-
-  // if (error) {
-  //   throw new Error(error.message)
-  // }
-
-  // return data.map(serializeCocktail)
-  return []
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?isAvailable=true`)
+  return resp.data
 })
 
 export const fetchCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
