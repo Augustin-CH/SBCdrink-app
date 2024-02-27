@@ -1,5 +1,5 @@
 export interface ICardData {
-  id?: number
+  id?: string
   cover?: string
   title?: string
   subTitle?: string

@@ -1,7 +1,7 @@
 import React from 'react'
 import CocktailForm from '@/features/cocktail/cocktailForm/CocktailForm'
 import { type FC } from 'react'
-import { type IBaseCocktail } from '../../types'
+import { type IPopulatedCocktail } from '../../types'
 import { createCocktail } from '@/features/cocktail/CocktailSlice'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 
@@ -27,7 +27,7 @@ const AddCocktail: FC<AddCocktailProps> = ({
             notificationError="Une erreur est survenue lors de l'ajout du cocktail"
             isModalOpen={isModalOpen}
             onCloseModal={onCloseModal}
-            cocktail={{} as IBaseCocktail}
+            cocktail={{} as IPopulatedCocktail}
             ingredients={ingredients}
         />
   )

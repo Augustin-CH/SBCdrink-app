@@ -6,25 +6,25 @@ import {
 } from '@/app/store'
 import {
   type IUpdateCocktail, type IBaseCocktail, type IFormatStepMakeCocktail,
-  type IMakeCocktail, type ICreateCocktail, type IPopulateCocktail
+  type IMakeCocktail, type ICreateCocktail,
+  type IPopulatedCocktail
 } from './types'
 import { env } from '@/env'
 import { calculeVolumeIngredient } from './utils'
-import { useAppSelector } from '@/app/hooks'
 
 const client = ApiClient.Instance()
 
 export interface CocktailState {
-  selectedCocktail: IBaseCocktail
-  listCocktails: IBaseCocktail[]
+  selectedCocktail: IPopulatedCocktail
+  listCocktails: IPopulatedCocktail[]
   listCocktailsStatus: FetchStatus
   singleStatus: FetchStatus
   error: string | null
 }
 
 const initialState: CocktailState = {
-  selectedCocktail: {} as IBaseCocktail,
-  listCocktails: [] as IBaseCocktail[],
+  selectedCocktail: {} as IPopulatedCocktail,
+  listCocktails: [] as IPopulatedCocktail[],
   listCocktailsStatus: 'idle',
   singleStatus: 'idle',
   error: null
@@ -71,40 +71,24 @@ export const cocktailSlice = createSlice({
   }
 })
 
-export const fetchAvailableCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?isAvailable=true`)
+export const fetchAvailableCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?isAvailable=true&withIngredients=true`)
   return resp.data
 })
 
-export const fetchCocktails = createAsyncThunk<IBaseCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/api/recipes/find`)
+export const fetchCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?withIngredients=true`)
   return resp.data
 })
-
-export const populate = (cocktail: IBaseCocktail[]): IPopulateCocktail[] => {
-  const { listIngredients } = useAppSelector(state => state.ingredient)
-  const { listRecipeIngredients } = useAppSelector(state => state.recipeIngredient)
-
-  return cocktail.map((cocktail) => ({
-    ...cocktail,
-    recipeIngredients: listRecipeIngredients.filter((recipeIngredient) => recipeIngredient.recipe === cocktail.id).map((recipeIngredient) => {
-      const ingredient = listIngredients.find((ingredient) => ingredient.id === recipeIngredient.ingredient)
-      return {
-        ...recipeIngredient,
-        ingredient: ingredient ?? {} as any
-      }
-    })
-  }))
-}
 
 export const formatStepMakeCocktail = ({
   rules,
   cocktail
 }: IFormatStepMakeCocktail): IMakeCocktail => {
   const { glassVolume, alcoholLevel } = rules
-  const { recipeIngredients } = cocktail
+  const { steps } = cocktail
 
-  const steps = recipeIngredients?.map(({ ingredient, orderIndex, proportion }) => {
+  const stepsMake = steps?.map(({ ingredient, orderIndex, proportion }) => {
     return {
       order: orderIndex,
       ingredientId: ingredient.id,
@@ -119,11 +103,13 @@ export const formatStepMakeCocktail = ({
     recipeId: cocktail.id,
     recipeName: cocktail.name,
     alcoholLevel: cocktail.alcoholLevel,
-    steps
+    steps: stepsMake
   }
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (orderData) => {
+  console.log(orderData)
+
   // const { data, error } = await supabase
   //   .rpc('insert_order_and_step', {
   //     p_recipe_name: orderData.recipeName,

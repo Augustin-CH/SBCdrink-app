@@ -3,7 +3,7 @@ import { type FormikHelpers, Formik, Form } from 'formik'
 import * as yup from 'yup'
 import { Button, Grid, Modal, TextField, Typography } from '@mui/material'
 import { type FC, useState } from 'react'
-import { type IFormCocktail, type IBaseCocktail } from '@/features/cocktail/types'
+import { type IFormCocktail, type IBaseCocktail, type IPopulatedCocktail } from '@/features/cocktail/types'
 import { useAppDispatch } from '@/app/hooks'
 import { type FetchStatus } from '@/app/shared/types'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +17,6 @@ import FooterListIngredients from './partials/FooterListIngredients'
 import { calculeVolumeIngredient } from '../utils'
 import GlassVolumeSlider from './partials/GlassVolumeSlider'
 import AlcoholLevel from './partials/AlcoholLevel'
-import { populate } from '../CocktailSlice'
 // import PictureField from './partials/PictureField'
 
 const validationSchema = yup.object({
@@ -27,7 +26,7 @@ const validationSchema = yup.object({
 interface CocktailFormProps {
   mode: 'add' | 'edit'
   className?: string
-  cocktail: IBaseCocktail
+  cocktail: IPopulatedCocktail
   request: (values: any) => void
   title: string
   submitText: string
@@ -53,8 +52,6 @@ const CocktailForm: FC<CocktailFormProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
-
-  const populateSelectedCocktail = populate([cocktail])[0]
 
   const onSubmit = useCallback(async (values: IFormCocktail, { resetForm }: FormikHelpers<IFormCocktail>): Promise<void> => {
     const newRecipe: any = { ...values }
@@ -114,8 +111,8 @@ const CocktailForm: FC<CocktailFormProps> = ({
         <Formik
           initialValues={{
             ...cocktail,
-            ingredients: populateSelectedCocktail?.recipeIngredients
-              ? [...populateSelectedCocktail?.recipeIngredients].map(({ proportion, orderIndex, ingredient }) => ({
+            ingredients: cocktail?.steps
+              ? [...cocktail?.steps].map(({ proportion, orderIndex, ingredient }) => ({
                   ...ingredient,
                   orderIndex,
                   volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
