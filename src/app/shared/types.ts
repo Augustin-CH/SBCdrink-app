@@ -31,3 +31,21 @@ export interface IBasePagination {
 export interface IBaseMeta {
   pagination: IBasePagination
 }
+
+// Slug is a copy of the enum from the backend (src/services/errors/types.ts)
+export enum Slug {
+  ErrRecipeNotFound = 'RECIPE_NOT_FOUND',
+  ErrIngredientNotFound = 'INGREDIENT_NOT_FOUND',
+
+  ErrOrderAlreadyInStatusCreated = 'ORDER_ALREADY_IN_STATUS_CREATED',
+
+  ErrIncorrectInput = 'INVALID_INPUT',
+
+  ErrInvalidEmail = 'INVALID_EMAIL',
+  ErrInvalidPassword = 'INVALID_PASSWORD',
+  ErrInvalidCredentials = 'INVALID_CREDENTIALS',
+  ErrExpiredToken = 'EXPIRED_TOKEN',
+  ErrInvalidRefleshToken = 'INVALID_REFRESH_TOKEN',
+  ErrUserAlreadyExist = 'USER_ALREADY_EXIST',
+  ErrUnknow = 'UNKNOW',
+}

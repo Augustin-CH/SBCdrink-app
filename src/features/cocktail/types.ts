@@ -37,18 +37,13 @@ export interface IFormCocktail extends Omit<IBaseCocktail, 'steps'> {
 }
 
 export interface IStepMakeCocktail {
-  order: number
-  ingredientId: number
-  ingredientName: string
-  ingredientIsAlcohol: boolean
-  ingredientAlcoholDegree: number
+  orderIndex: number
+  ingredient: number
   quantity: number
 }
 
 export interface IMakeCocktail {
-  recipeId: string
-  recipeName: string
-  alcoholLevel: number
+  recipe: string
   steps: IStepMakeCocktail[]
 }
 

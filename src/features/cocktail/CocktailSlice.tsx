@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { type FetchStatus } from '@/app/shared/types'
+import { Slug, type FetchStatus } from '@/app/shared/types'
 import { ApiClient } from '@/lib/http/api'
 import {
   type RootState
@@ -90,45 +90,31 @@ export const formatStepMakeCocktail = ({
 
   const stepsMake = steps?.map(({ ingredient, orderIndex, proportion }) => {
     return {
-      order: orderIndex,
-      ingredientId: ingredient.id,
-      ingredientName: ingredient.name,
-      ingredientIsAlcohol: ingredient.isAlcohol,
-      ingredientAlcoholDegree: ingredient.alcoholDegree,
+      orderIndex,
+      ingredient: ingredient.id,
       quantity: calculeVolumeIngredient(alcoholLevel, glassVolume, proportion, ingredient.isAlcohol)
     }
   })
 
   return {
-    recipeId: cocktail.id,
-    recipeName: cocktail.name,
-    alcoholLevel: cocktail.alcoholLevel,
+    recipe: cocktail.id,
     steps: stepsMake
   }
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (orderData) => {
-  console.log(orderData)
+  const resp = await client.post(`${env.REACT_APP_API_URL}/v1/order`, orderData)
+    .catch((error) => {
+      console.log('error', error)
+      const slug = error.response?.data?.slug
 
-  // const { data, error } = await supabase
-  //   .rpc('insert_order_and_step', {
-  //     p_recipe_name: orderData.recipeName,
-  //     p_alcohol_level: orderData.alcoholLevel,
-  //     p_steps: orderData.steps?.map((step) => ({
-  //       ingredient_name: step.ingredientName,
-  //       ingredient_is_alcohol: step.ingredientIsAlcohol,
-  //       ingredient_alcohol_degree: step.ingredientAlcoholDegree,
-  //       quantity: step.quantity
-  //     }))
-  //   })
-  // console.log(data, error)
+      if (slug === Slug.ErrOrderAlreadyInStatusCreated) {
+        throw new Error('Il y a des commandes en cours. Impossible de procéder.')
+      }
 
-  // if (error) {
-  //   throw new Error(error.message)
-  // }
-
-  // return data as unknown as null
-  return null
+      throw new Error("Une erreur est survenue lors de l'envoi de la demande de cocktail")
+    })
+  return resp.data
 })
 
 export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {

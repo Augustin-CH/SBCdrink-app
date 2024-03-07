@@ -34,7 +34,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
 
   const ingredientText: string[] = selectedCocktail?.steps?.map((item, index) => {
     if (!stepCocktails) return ''
-    const ingredientIndex = stepCocktails.steps.findIndex((step) => step.ingredientId === item.ingredient.id)
+    const ingredientIndex = stepCocktails.steps.findIndex((step) => step.ingredient === item.ingredient.id)
     const quantity = stepCocktails.steps[ingredientIndex]?.quantity.toFixed(1)
     return `${index !== 0 ? ' ' : ''}${item.ingredient.name} (${quantity} cl)`
   })
@@ -55,11 +55,8 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
           type: 'success'
         }))
       } catch (e: AxiosError | any) {
-        const title = e.message === 'There are unfinished orders. Unable to proceed.'
-          ? 'Il y a des commandes en cours. Impossible de procéder.'
-          : "Une erreur est survenue lors de l'envoi de la demande de cocktail"
         dispatch(showNotification({
-          title,
+          title: e.message,
           type: 'error'
         }))
       } finally {
