@@ -1,15 +1,15 @@
 import React, { type FC } from 'react'
 import { Box, Card, Grid, Typography, CardMedia } from '@mui/material'
-import { type ICardData } from '@/features/ui/card/types'
+import { type ICardCocktailData } from '@/features/cocktail/list/cardCocktail/types'
 import { TextNeon } from '@/features/ui/components/TextNeon/TextNeon'
 
-interface BlogPostCardProps {
-  data: ICardData
+interface CardCocktailProps {
+  data: ICardCocktailData
   index: number
   onClick: () => void
 }
 
-const BlogPostCard: FC<BlogPostCardProps> = ({ data, index, onClick }) => {
+const CardCocktail: FC<CardCocktailProps> = ({ data, index, onClick }) => {
   const { cover, title, subTitle, description } = data
 
   return (
@@ -41,4 +41,4 @@ const BlogPostCard: FC<BlogPostCardProps> = ({ data, index, onClick }) => {
   )
 }
 
-export default BlogPostCard
+export { CardCocktail }

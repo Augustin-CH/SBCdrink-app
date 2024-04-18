@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from 'react'
 import { Button, Grid } from '@mui/material'
-import { BlogPostCard } from '@/features/ui/card'
-import { type IPopulatedCocktail, type IBaseCocktail } from '@features/cocktail/types'
+import { CardCocktail } from '@/features/cocktail/list/cardCocktail/CardCocktail'
+import { type IPopulatedCocktail, type IBaseCocktail } from '@/features/cocktail/types'
 import { type FC, useState } from 'react'
 import { AddCocktail, EditCocktail, ViewCocktail } from '@/features/cocktail'
 import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
-import { type ICardData } from '@/features/ui/card/types'
+import { type ICardData } from '@/features/cocktail/list/cardCocktail/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 
 interface ListCocktailProps {
@@ -90,7 +90,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
 
           <Grid container spacing={3}>
             {cocktailsList?.map((item: ICardData, index: number) => (
-              <BlogPostCard key={item.id} data={item} index={index} onClick={() => {
+              <CardCocktail key={item.id} data={item} index={index} onClick={() => {
                 dispatch(setSelectedCocktail(cocktails[index]))
                 setModalMode('edit')
                 handleModal()

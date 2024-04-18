@@ -1,8 +1,8 @@
 import React, { useMemo, type FC, useCallback } from 'react'
-import { type IBaseIngredient } from '@features/ingredient/types'
+import { type IBaseIngredient } from '@/features/ingredient/types'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useFormikContext } from 'formik'
-import { type IFormCocktail } from '@features/cocktail/types'
+import { type IFormCocktail } from '@/features/cocktail/types'
 
 interface IngredientColumnProps {
   ingredients: IBaseIngredient[]

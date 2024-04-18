@@ -1,7 +1,7 @@
 import React, { type FC } from 'react'
 import { Box, CardMedia, Grid } from '@mui/material'
 import { useFormikContext } from 'formik'
-import { type IFormCocktail } from '@features/cocktail/types'
+import { type IFormCocktail } from '@/features/cocktail/types'
 import { env } from '@/env'
 
 const PictureField: FC = () => {

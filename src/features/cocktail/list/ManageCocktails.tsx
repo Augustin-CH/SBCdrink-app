@@ -2,7 +2,7 @@ import React, { type FC, useCallback } from 'react'
 import { type FetchStatus } from '@/app/shared/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 import Loader from '@/features/ui/loader/loader'
-import { type IPopulatedCocktail } from './types'
+import { type IPopulatedCocktail } from '../types'
 import ListCocktail from './ListCocktail'
 
 interface ManageCocktailsProps {

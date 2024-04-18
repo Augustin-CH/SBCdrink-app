@@ -1,4 +1,4 @@
-export interface ICardData {
+export interface ICardCocktailData {
   id?: string
   cover?: string
   title?: string
