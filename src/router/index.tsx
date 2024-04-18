@@ -9,6 +9,7 @@ import WaterDropIcon from '@mui/icons-material/WaterDrop'
 import Home from '@/pages/Home'
 import Bottle from '@/pages/dashboard/Bottle'
 import Cocktail from '@/pages/dashboard/Cocktail'
+import Ingredient from '@/pages/dashboard/Ingredient'
 
 export interface RouteConstants {
   element: any
@@ -50,7 +51,7 @@ export const routes: RouteConstants[] = [
       },
       {
         path: paths.dashboard.ingredient,
-        element: <h1>Ingredient</h1>,
+        element: <Ingredient/>,
         sidebar: {
           label: 'Ingredients',
           icon: <WaterDropIcon/>,
