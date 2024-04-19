@@ -105,7 +105,6 @@ export const formatStepMakeCocktail = ({
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (orderData) => {
   const resp = await client.post(`${env.REACT_APP_API_URL}/v1/order`, orderData)
     .catch((error) => {
-      console.log('error', error)
       const slug = error.response?.data?.slug
 
       if (slug === Slug.ErrOrderAlreadyInStatusCreated) {

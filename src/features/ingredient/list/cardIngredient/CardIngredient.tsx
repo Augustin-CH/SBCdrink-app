@@ -23,7 +23,7 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
             {isAlcohol ? 'Alcoolisé' : 'Non alcoolisé'}
           </Typography>
           <Typography component="div">
-            Degré d'alcool: {alcoholDegree}%
+            Degré d&apos;alcool: {alcoholDegree}%
           </Typography>
         </Box>
       </Card>

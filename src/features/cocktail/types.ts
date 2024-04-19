@@ -38,7 +38,7 @@ export interface IFormCocktail extends Omit<IBaseCocktail, 'steps'> {
 
 export interface IStepMakeCocktail {
   orderIndex: number
-  ingredient: number
+  ingredient: string
   quantity: number
 }
 

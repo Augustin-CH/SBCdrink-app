@@ -6,7 +6,7 @@ import { type FC, useState } from 'react'
 import { AddCocktail, EditCocktail, ViewCocktail } from '@/features/cocktail'
 import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
-import { type ICardData } from '@/features/cocktail/list/cardCocktail/types'
+import { type ICardCocktailData } from '@/features/cocktail/list/cardCocktail/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 
 interface ListCocktailProps {
@@ -29,7 +29,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
     setIsOpen(!isOpen)
   }, [isOpen])
 
-  const cocktailsList = useMemo((): ICardData[] => {
+  const cocktailsList = useMemo((): ICardCocktailData[] => {
     return cocktails?.map((cocktail) => ({
       id: cocktail.id,
       cover: `${'env.REACT_APP_SUPABASE_URL'}/storage/v1/object/public/${cocktail.picture}`,
@@ -89,7 +89,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
           </Button>
 
           <Grid container spacing={3}>
-            {cocktailsList?.map((item: ICardData, index: number) => (
+            {cocktailsList?.map((item: ICardCocktailData, index: number) => (
               <CardCocktail key={item.id} data={item} index={index} onClick={() => {
                 dispatch(setSelectedCocktail(cocktails[index]))
                 setModalMode('edit')

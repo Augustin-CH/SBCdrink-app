@@ -1,5 +1,5 @@
 export interface IBaseIngredient {
-  id: number
+  id: string
   name: string
   isAlcohol: boolean
   alcoholDegree: number
@@ -7,4 +7,8 @@ export interface IBaseIngredient {
   createdAt: string
 }
 
-export type IFetchIngredients = number[]
+export interface IUpdateIngredient extends IBaseIngredient {
+}
+
+export interface IFormIngredient extends IBaseIngredient {
+}

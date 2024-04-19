@@ -3,9 +3,14 @@ import { type IBasePagination, type FetchStatus } from '@/app/shared/types'
 import {
   type RootState
 } from '@/app/store'
-import { type IFetchIngredients, type IBaseIngredient } from '@/features/ingredient/types'
+import { type IUpdateIngredient, type IBaseIngredient } from '@/features/ingredient/types'
+import { env } from '@/env'
+import { ApiClient } from '@/lib/http/api'
+
+const client = ApiClient.Instance()
 
 export interface IngredientState {
+  selectedIngredient: IBaseIngredient
   listIngredients: IBaseIngredient[]
   pagination: IBasePagination
   listIngredientsStatus: FetchStatus
@@ -13,6 +18,7 @@ export interface IngredientState {
 }
 
 const initialState: IngredientState = {
+  selectedIngredient: {} as IBaseIngredient,
   listIngredients: [] as IBaseIngredient[],
   pagination: {} as IBasePagination,
   listIngredientsStatus: 'idle',
@@ -23,6 +29,9 @@ export const ingredientSlice = createSlice({
   name: 'ingredient',
   initialState,
   reducers: {
+    setSelectedIngredient (state, action) {
+      state.selectedIngredient = action.payload
+    },
     setListIngredients (state, action) {
       state.listIngredients = action.payload
     },
@@ -57,23 +66,28 @@ export const serializeIngredient = (ingredient: any): IBaseIngredient => {
   }
 }
 
-export const fetchIngredients = createAsyncThunk<IBaseIngredient[], IFetchIngredients, { state: RootState }>('ingredient/fetchIngredients', async (ingredientIds) => {
-  // const { data, error } = await supabase
-  //   .from('ingredient')
-  //   .select('*')
-  //   .in('id', ingredientIds)
+export const fetchIngredients = createAsyncThunk<IBaseIngredient[], undefined, { state: RootState }>('ingredient/fetchIngredients', async () => {
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/ingredients`)
+  return resp.data
+})
 
-  // if (error) {
-  //   throw new Error(error.message)
-  // }
-
-  // return data.map(serializeIngredient)
-  return []
+export const updateIngredients = createAsyncThunk<IBaseIngredient, IUpdateIngredient, { state: RootState }>('ingredient/updateIngredients', async (
+  ingredient,
+  { dispatch, getState }
+) => {
+  const resp = await client.put(`${env.REACT_APP_API_URL}/v1/ingredient/${ingredient?.id}`, ingredient)
+  const { listIngredients } = getState().ingredient
+  const newListIngredients = [...listIngredients]
+  const index = newListIngredients.findIndex((i) => i.id === ingredient.id)
+  newListIngredients[index] = resp.data
+  dispatch(setListIngredients(newListIngredients))
+  return resp.data
 })
 
 const internalActions = ingredientSlice.actions
 
 export const {
+  setSelectedIngredient,
   setListStatus,
   setListIngredients
 } = internalActions
