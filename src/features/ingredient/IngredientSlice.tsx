@@ -67,7 +67,7 @@ export const serializeIngredient = (ingredient: any): IBaseIngredient => {
 }
 
 export const fetchIngredients = createAsyncThunk<IBaseIngredient[], undefined, { state: RootState }>('ingredient/fetchIngredients', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/ingredients`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/ingredients?sort=desc`)
   return resp.data
 })
 
@@ -81,6 +81,16 @@ export const updateIngredients = createAsyncThunk<IBaseIngredient, IUpdateIngred
   const index = newListIngredients.findIndex((i) => i.id === ingredient.id)
   newListIngredients[index] = resp.data
   dispatch(setListIngredients(newListIngredients))
+  return resp.data
+})
+
+export const createIngredients = createAsyncThunk<IBaseIngredient, IBaseIngredient, { state: RootState }>('ingredient/createIngredients', async (
+  ingredient,
+  { dispatch, getState }
+) => {
+  const resp = await client.post(`${env.REACT_APP_API_URL}/v1/ingredient`, ingredient)
+  const { listIngredients } = getState().ingredient
+  dispatch(setListIngredients([resp.data, ...listIngredients]))
   return resp.data
 })
 

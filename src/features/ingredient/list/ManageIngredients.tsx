@@ -1,5 +1,5 @@
 import React, { type FC, useCallback, useState, useMemo } from 'react'
-import { Grid } from '@mui/material'
+import { Button, Grid } from '@mui/material'
 import { type FetchStatus } from '@/app/shared/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 import Loader from '@/features/ui/loader/loader'
@@ -8,6 +8,7 @@ import { setSelectedIngredient } from '../IngredientSlice'
 import { CardIngredient } from './cardIngredient/CardIngredient'
 import { type ICardIngredientData } from './cardIngredient/types'
 import EditIngredient from '../ingredientForm/edit/EditIngredient'
+import AddIngredient from '../ingredientForm/add/AddIngredient'
 
 interface ManageIngredientsProps {
   ingredients: IBaseIngredient[]
@@ -47,12 +48,10 @@ const ManageIngredients: FC<ManageIngredientsProps> = ({
         )
       } else if (modalMode === 'add') {
         return (
-          <></>
-          // <AddCocktail
-          //   ingredients={ingredients}
-          //   isModalOpen={isOpen}
-          //   onCloseModal={handleModal}
-          // />
+          <AddIngredient
+            isModalOpen={isOpen}
+            onCloseModal={handleModal}
+          />
         )
       }
     }
@@ -70,6 +69,25 @@ const ManageIngredients: FC<ManageIngredientsProps> = ({
     } else {
       return (
         <>
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{
+              display: 'flex',
+              justifyContent: 'end',
+              alignItems: 'center',
+              ml: 'auto',
+              mb: 3,
+              mr: 2
+            }}
+            onClick={() => {
+              dispatch(setSelectedIngredient({} as IBaseIngredient))
+              setModalMode('add')
+              handleModal()
+            }}
+          >
+            Ajouter
+          </Button>
           <Grid container spacing={3}>
             {ingredientsList?.map((item: ICardIngredientData, index: number) => (
                 <CardIngredient key={item.id} data={item} index={index} onClick={() => {
