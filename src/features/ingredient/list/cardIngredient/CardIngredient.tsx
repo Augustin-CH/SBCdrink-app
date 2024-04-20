@@ -9,6 +9,7 @@ import { showNotification } from '@/features/notification/notificationSlice'
 import { AxiosError } from 'axios'
 import { deleteIngredient } from '@/features/ingredient/IngredientSlice'
 import { Slug } from '@/app/shared/types'
+import styled from '@emotion/styled'
 
 interface CardIngredientProps {
   data: ICardIngredientData
@@ -44,6 +45,17 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
     }
   }, [dispatch, data.id])
 
+  const DeleteButton = styled(DeleteIcon)`
+    color: red;
+    position: relative;
+    top: -40px;
+    right: 15px;
+    float: right;
+    :hover {
+      cursor: pointer;
+    }
+  `
+
   return (
     <Grid item xs={12} sm={12} md={6} key={`card_${index}`}>
       <Card sx={{ height: 140, display: 'flex', padding: 2, ':hover': { cursor: 'pointer' } }} onClick={onClick}>
@@ -59,10 +71,10 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
           </Typography>
         </Box>
       </Card>
-      <DeleteIcon
+      <DeleteButton
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onClick={handleDelete}
-        sx={{ color: 'red', position: 'relative', top: '-40px', right: '15px', float: 'right', ':hover': { cursor: 'pointer' } }}
+        className='delete-ingredient'
       />
     </Grid>
   )

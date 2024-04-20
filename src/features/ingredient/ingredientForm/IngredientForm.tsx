@@ -13,13 +13,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import { type IFormIngredient, type IBaseIngredient } from '@/features/ingredient/types'
 
 const validationSchema = yup.object({
-  ingredients: yup.array().of(
-    yup.object().shape({
-      // id: yup.number().required(),
-      name: yup.string().required(),
-      alcoholDegree: yup.number().required()
-    })
-  )
+  name: yup.string().required('Le nom est requis'),
+  alcoholDegree: yup.number().required('Le degré d\'alcool est requis')
 })
 
 interface IngredientFormProps {
@@ -102,7 +97,7 @@ const IngredientForm: FC<IngredientFormProps> = ({
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ values, handleChange, handleBlur }) => (
+          {({ values, errors, handleChange, handleBlur }) => (
             <Form>
               <Grid container>
                 <Grid container mb={3} pt={3}>
@@ -114,6 +109,9 @@ const IngredientForm: FC<IngredientFormProps> = ({
                     value={values.name}
                     onChange={handleChange}
                     multiline
+                    error={!!errors.name}
+                    helperText={errors.name}
+                    required
                   />
                 </Grid>
                 <Grid container mb={2}>
@@ -126,6 +124,9 @@ const IngredientForm: FC<IngredientFormProps> = ({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     type="number"
+                    error={!!errors.alcoholDegree}
+                    helperText={errors.alcoholDegree}
+                    required
                   />
                 </Grid>
               </Grid>

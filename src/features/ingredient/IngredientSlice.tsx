@@ -73,25 +73,40 @@ export const fetchIngredients = createAsyncThunk<IBaseIngredient[], undefined, {
 
 export const updateIngredient = createAsyncThunk<IBaseIngredient, IUpdateIngredient, { state: RootState }>('ingredient/updateIngredients', async (
   ingredient,
-  { dispatch, getState }
+  { dispatch, getState, rejectWithValue }
 ) => {
-  const resp = await client.put(`${env.REACT_APP_API_URL}/v1/ingredient/${ingredient?.id}`, ingredient)
-  const { listIngredients } = getState().ingredient
-  const newListIngredients = [...listIngredients]
-  const index = newListIngredients.findIndex((i) => i.id === ingredient.id)
-  newListIngredients[index] = resp.data
-  dispatch(setListIngredients(newListIngredients))
-  return resp.data
+  return await new Promise((resolve, reject) => {
+    client.put(`${env.REACT_APP_API_URL}/v1/ingredient/${ingredient?.id}`, ingredient)
+      .then((resp) => {
+        const { listIngredients } = getState().ingredient
+        const newListIngredients = [...listIngredients]
+        const index = newListIngredients.findIndex((i) => i.id === ingredient.id)
+        newListIngredients.splice(index, 1)
+        newListIngredients.unshift(resp.data)
+        dispatch(setListIngredients(newListIngredients))
+        resolve(resp.data)
+      })
+      .catch((e) => {
+        reject(rejectWithValue(e))
+      })
+  })
 })
 
 export const createIngredient = createAsyncThunk<IBaseIngredient, IBaseIngredient, { state: RootState }>('ingredient/createIngredients', async (
   ingredient,
-  { dispatch, getState }
+  { dispatch, getState, rejectWithValue }
 ) => {
-  const resp = await client.post(`${env.REACT_APP_API_URL}/v1/ingredient`, ingredient)
-  const { listIngredients } = getState().ingredient
-  dispatch(setListIngredients([resp.data, ...listIngredients]))
-  return resp.data
+  return await new Promise((resolve, reject) => {
+    client.post(`${env.REACT_APP_API_URL}/v1/ingredient`, ingredient)
+      .then((resp) => {
+        const { listIngredients } = getState().ingredient
+        dispatch(setListIngredients([resp.data, ...listIngredients]))
+        resolve(resp.data)
+      })
+      .catch((e) => {
+        reject(rejectWithValue(e))
+      })
+  })
 })
 
 export const deleteIngredient = createAsyncThunk<IBaseIngredient, string, { state: RootState }>('ingredient/deleteIngredients', async (
