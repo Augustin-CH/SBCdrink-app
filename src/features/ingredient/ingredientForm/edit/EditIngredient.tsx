@@ -2,7 +2,7 @@ import React from 'react'
 import { type FC } from 'react'
 import { useAppSelector } from '@/app/hooks'
 import IngredientForm from '../IngredientForm'
-import { updateIngredients } from '@/features/ingredient/IngredientSlice'
+import { updateIngredient } from '@/features/ingredient/IngredientSlice'
 
 interface EditIngredientProps {
   isModalOpen: boolean
@@ -20,7 +20,7 @@ const EditIngredient: FC<EditIngredientProps> = ({
         mode="edit"
         className="edit-ingredient"
         ingredient={selectedIngredient}
-        request={updateIngredients}
+        request={updateIngredient}
         title="Edition d'un ingrédient"
         submitText="Modifier"
         notificationSuccess="Ingrédient modifié avec succès"

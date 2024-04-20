@@ -1,7 +1,7 @@
 import React from 'react'
 import { type FC } from 'react'
 import IngredientForm from '../IngredientForm'
-import { createIngredients } from '@/features/ingredient/IngredientSlice'
+import { createIngredient } from '@/features/ingredient/IngredientSlice'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 
 interface AddIngredientProps {
@@ -17,7 +17,7 @@ const AddIngredient: FC<AddIngredientProps> = ({
     <IngredientForm
         mode="add"
         className="add-ingredient"
-        request={createIngredients}
+        request={createIngredient}
         title="Ajout d'un ingrédient"
         submitText="Ajouter"
         notificationSuccess="Ingrédient ajouté avec succès"
