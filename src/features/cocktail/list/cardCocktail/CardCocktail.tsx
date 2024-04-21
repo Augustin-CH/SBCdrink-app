@@ -13,7 +13,7 @@ const CardCocktail: FC<CardCocktailProps> = ({ data, index, onClick }) => {
   const { cover, title, subTitle, description } = data
 
   return (
-    <Grid item xs={12} sm={12} md={6} key={`card_${index}`} onClick={onClick}>
+    <Grid item xs={12} sm={12} md={6} key={`card_recipe_${index}`} onClick={onClick}>
       <Card sx={{ height: 230, display: 'flex', padding: 2 }}>
         <Box>
           <div style={{ height: 200, width: 120, marginRight: 10 }}>

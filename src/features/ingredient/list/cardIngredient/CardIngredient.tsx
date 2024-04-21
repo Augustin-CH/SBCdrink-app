@@ -45,21 +45,22 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
     }
   }, [dispatch, data.id])
 
-  const DeleteButton = styled(DeleteIcon)`
-    color: red;
-    position: relative;
-    top: -40px;
-    right: 15px;
-    float: right;
-    :hover {
-      cursor: pointer;
+  const BoxDeleteButton = styled(Box)`
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    .delete-ingredient {
+      color: red;
+      :hover {
+        cursor: pointer;
+      }
     }
   `
 
   return (
-    <Grid item xs={12} sm={12} md={6} key={`card_${index}`}>
+    <Grid item xs={12} sm={12} md={6} key={`card_ingredient_${index}`}>
       <Card sx={{ height: 140, display: 'flex', padding: 2, ':hover': { cursor: 'pointer' } }} onClick={onClick}>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
           <Typography component="div" variant="h5" paddingBottom={1}>
             <TextNeon text={name?.toUpperCase() ?? ''} type={1} style={{ fontSize: 25 }} />
           </Typography>
@@ -70,12 +71,15 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
             Degré d&apos;alcool: {alcoholDegree}%
           </Typography>
         </Box>
+        <BoxDeleteButton>
+          <DeleteIcon
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={handleDelete}
+            className='delete-ingredient'
+          />
+        </BoxDeleteButton>
       </Card>
-      <DeleteButton
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onClick={handleDelete}
-        className='delete-ingredient'
-      />
+
     </Grid>
   )
 }
