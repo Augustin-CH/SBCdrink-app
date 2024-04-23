@@ -32,7 +32,10 @@ const CardCocktail: FC<CardCocktailProps> = ({ data, index, onClick }) => {
           <Typography component="div" variant="subtitle1" paddingBottom={1}>
             {subTitle}
           </Typography>
-          <Typography component="div">
+          <Typography component="div" sx={{
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
+          }}>
             {description}
           </Typography>
         </Box>
