@@ -5,13 +5,7 @@ import { Notification } from '@/features/notification/Notification'
 
 const Main: FC = () => {
   return (
-    <div style={{
-      // backgroundImage: 'url("/assets/images/beach_summer_2.png")',
-      // backgroundRepeat: 'no-repeat',
-      // backgroundSize: 'cover',
-      width: '100vw',
-      height: '100vh'
-    }}>
+    <div>
         <Notification/>
         <Outlet/>
     </div>
