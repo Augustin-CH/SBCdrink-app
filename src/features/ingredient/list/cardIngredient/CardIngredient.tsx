@@ -55,6 +55,11 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
         cursor: pointer;
       }
     }
+    position: relative;
+    top: -15px;
+    left: -15px;
+    float: right;
+    height: 0;
   `
 
   return (
@@ -71,15 +76,14 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
             Degré d&apos;alcool: {alcoholDegree}%
           </Typography>
         </Box>
-        <BoxDeleteButton>
-          <DeleteIcon
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={handleDelete}
-            className='delete-ingredient'
-          />
-        </BoxDeleteButton>
       </Card>
-
+      <BoxDeleteButton>
+        <DeleteIcon
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onClick={handleDelete}
+          className='delete-ingredient'
+        />
+      </BoxDeleteButton>
     </Grid>
   )
 }
