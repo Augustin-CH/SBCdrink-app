@@ -10,6 +10,7 @@ import { AxiosError } from 'axios'
 import { deleteIngredient } from '@/features/ingredient/IngredientSlice'
 import { Slug } from '@/app/shared/types'
 import styled from '@emotion/styled'
+import { LocalBar, NoDrinks } from '@mui/icons-material'
 
 interface CardIngredientProps {
   data: ICardIngredientData
@@ -64,13 +65,10 @@ const CardIngredient: FC<CardIngredientProps> = ({ data, index, onClick }) => {
 
   return (
     <Grid item xs={12} sm={12} md={6} key={`card_ingredient_${index}`}>
-      <Card sx={{ height: 140, display: 'flex', padding: 2, ':hover': { cursor: 'pointer' } }} onClick={onClick}>
+      <Card sx={{ height: 100, display: 'flex', padding: 2, ':hover': { cursor: 'pointer' } }} onClick={onClick}>
         <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-          <Typography component="div" variant="h5" paddingBottom={1}>
-            <TextNeon text={name?.toUpperCase() ?? ''} type={1} style={{ fontSize: 25 }} />
-          </Typography>
-          <Typography component="div" variant="subtitle1" paddingBottom={1}>
-            {isAlcohol ? 'Alcoolisé' : 'Non alcoolisé'}
+          <Typography component="div" variant="h5" paddingBottom={1} sx={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ height: 25, width: 25, marginRight: 10 }} >{isAlcohol ? <LocalBar /> : <NoDrinks />}</div><TextNeon text={name?.toUpperCase() ?? ''} type={1} style={{ fontSize: 25 }} />
           </Typography>
           <Typography component="div">
             Degré d&apos;alcool: {alcoholDegree}%
