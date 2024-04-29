@@ -15,6 +15,8 @@ export interface IBaseCocktail {
     orderIndex: number
   }>
   isAvailable: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IPopulatedCocktail extends Omit<IBaseCocktail, 'steps'> {
@@ -29,6 +31,7 @@ export interface IPopulatedCocktail extends Omit<IBaseCocktail, 'steps'> {
 export interface IIngredientCocktailForm extends IBaseIngredient {
   orderIndex: number
   volume: number
+  proportion: number
 }
 
 export interface IFormCocktail extends Omit<IBaseCocktail, 'steps'> {

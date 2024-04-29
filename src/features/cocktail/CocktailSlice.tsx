@@ -77,7 +77,7 @@ export const fetchAvailableCocktails = createAsyncThunk<IPopulatedCocktail[], un
 })
 
 export const fetchCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?withIngredients=true`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?withIngredients=true&sort=desc`)
   return resp.data
 })
 
@@ -116,10 +116,20 @@ export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootS
   return resp.data
 })
 
-export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {
-  const resp = await client.put(`${env.REACT_APP_API_URL}/api/recipes/${data.id}`, { data })
-  dispatch(fetchCocktails())
-  return resp.data
+export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, { state: RootState }>('cocktail/updateCocktail', async (
+  cocktail,
+  { dispatch, getState, rejectWithValue }
+) => {
+  return await new Promise((resolve, reject) => {
+    client.put(`${env.REACT_APP_API_URL}/v1/recipe/${cocktail.id}`, cocktail)
+      .then((resp) => {
+        dispatch(fetchCocktails())
+        resolve(resp.data)
+      })
+      .catch((e) => {
+        reject(rejectWithValue(e))
+      })
+  })
 })
 
 export const createCocktail = createAsyncThunk<IBaseCocktail, ICreateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {

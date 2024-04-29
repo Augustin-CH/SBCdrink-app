@@ -57,10 +57,12 @@ const CocktailForm: FC<CocktailFormProps> = ({
     const newRecipe: any = { ...values }
     delete newRecipe.glassVolume
     delete newRecipe.isAvailable
-    newRecipe.ingredients = newRecipe.ingredients.map((item: any) => {
-      delete item.volume
-      return item
-    })
+    newRecipe.steps = values.ingredients.map(({ orderIndex, proportion, ...ingredient }) => ({
+      orderIndex,
+      proportion,
+      ingredient: ingredient.id
+    }))
+    delete newRecipe.ingredients
 
     // TODO remove for send picture
     delete newRecipe.picture
@@ -111,10 +113,12 @@ const CocktailForm: FC<CocktailFormProps> = ({
         <Formik
           initialValues={{
             ...cocktail,
+            steps: undefined,
             ingredients: cocktail?.steps
               ? [...cocktail?.steps].map(({ proportion, orderIndex, ingredient }) => ({
                   ...ingredient,
                   orderIndex,
+                  proportion,
                   volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
                 })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
