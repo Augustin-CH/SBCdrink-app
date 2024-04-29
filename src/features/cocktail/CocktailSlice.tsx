@@ -132,10 +132,20 @@ export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, {
   })
 })
 
-export const createCocktail = createAsyncThunk<IBaseCocktail, ICreateCocktail, { state: RootState }>('cocktail/updateCocktail', async (data, { dispatch }) => {
-  const resp = await client.post(`${env.REACT_APP_API_URL}/api/recipes`, { data })
-  dispatch(fetchCocktails())
-  return resp.data
+export const createCocktail = createAsyncThunk<IBaseCocktail, ICreateCocktail, { state: RootState }>('cocktail/updateCocktail', async (
+  cocktail,
+  { dispatch, getState, rejectWithValue }
+) => {
+  return await new Promise((resolve, reject) => {
+    client.post(`${env.REACT_APP_API_URL}/v1/recipe`, cocktail)
+      .then((resp) => {
+        dispatch(fetchCocktails())
+        resolve(resp.data)
+      })
+      .catch((e) => {
+        reject(rejectWithValue(e))
+      })
+  })
 })
 
 const internalActions = cocktailSlice.actions
