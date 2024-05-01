@@ -72,12 +72,12 @@ export const cocktailSlice = createSlice({
 })
 
 export const fetchAvailableCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?isAvailable=true&withIngredients=true`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/recipes?isAvailable=true&withIngredients=true`)
   return resp.data
 })
 
 export const fetchCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/recipes?withIngredients=true&sort=desc`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/recipes?withIngredients=true&sort=desc`)
   return resp.data
 })
 
@@ -103,7 +103,7 @@ export const formatStepMakeCocktail = ({
 }
 
 export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootState }>('cocktail/makeCocktail', async (orderData) => {
-  const resp = await client.post(`${env.REACT_APP_API_URL}/v1/order`, orderData)
+  const resp = await client.post(`${env.REACT_APP_API_URL}/api/v1/order`, orderData)
     .catch((error) => {
       const slug = error.response?.data?.slug
 
@@ -121,7 +121,7 @@ export const updateCocktail = createAsyncThunk<IBaseCocktail, IUpdateCocktail, {
   { dispatch, getState, rejectWithValue }
 ) => {
   return await new Promise((resolve, reject) => {
-    client.put(`${env.REACT_APP_API_URL}/v1/recipe/${cocktail.id}`, cocktail)
+    client.put(`${env.REACT_APP_API_URL}/api/v1/recipe/${cocktail.id}`, cocktail)
       .then((resp) => {
         dispatch(fetchCocktails())
         resolve(resp.data)
@@ -137,7 +137,7 @@ export const createCocktail = createAsyncThunk<IBaseCocktail, ICreateCocktail, {
   { dispatch, getState, rejectWithValue }
 ) => {
   return await new Promise((resolve, reject) => {
-    client.post(`${env.REACT_APP_API_URL}/v1/recipe`, cocktail)
+    client.post(`${env.REACT_APP_API_URL}/api/v1/recipe`, cocktail)
       .then((resp) => {
         dispatch(fetchCocktails())
         resolve(resp.data)

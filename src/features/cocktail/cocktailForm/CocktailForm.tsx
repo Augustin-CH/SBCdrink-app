@@ -17,6 +17,7 @@ import FooterListIngredients from './partials/FooterListIngredients'
 import { calculeVolumeIngredient } from '../utils'
 import GlassVolumeSlider from './partials/GlassVolumeSlider'
 import AlcoholLevel from './partials/AlcoholLevel'
+import PictureField from './partials/PictureField'
 // import PictureField from './partials/PictureField'
 
 const validationSchema = yup.object({
@@ -130,7 +131,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
           {({ values, handleChange, handleBlur }) => (
             <Form>
               <Grid container>
-                {/* <PictureField /> */}
+                <PictureField />
                 <Grid container mb={3} pt={3}>
                   <TextField
                     fullWidth

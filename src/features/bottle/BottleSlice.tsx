@@ -43,7 +43,7 @@ export const bottleSlice = createSlice({
 })
 
 export const fetchBottles = createAsyncThunk<IPopulatedBottle[], undefined, { state: RootState }>('bottle/fetchBottles', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/machine-configurations?withIngredients=true`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/machine-configurations?withIngredients=true`)
   return resp.data
 })
 
@@ -52,7 +52,7 @@ export const updateBottle = createAsyncThunk<IBaseBottle, IUpdateBottles, { stat
   { dispatch, rejectWithValue }
 ) => {
   return await new Promise((resolve, reject) => {
-    client.put(`${env.REACT_APP_API_URL}/v1/machine-configuration/${bottle.id}`, bottle)
+    client.put(`${env.REACT_APP_API_URL}/api/v1/machine-configuration/${bottle.id}`, bottle)
       .then((resp) => {
         dispatch(fetchBottles())
         resolve(resp.data)

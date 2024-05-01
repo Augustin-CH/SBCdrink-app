@@ -67,7 +67,7 @@ export const serializeIngredient = (ingredient: any): IBaseIngredient => {
 }
 
 export const fetchIngredients = createAsyncThunk<IBaseIngredient[], undefined, { state: RootState }>('ingredient/fetchIngredients', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/ingredients?sort=desc`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/ingredients?sort=desc`)
   return resp.data
 })
 
@@ -76,7 +76,7 @@ export const updateIngredient = createAsyncThunk<IBaseIngredient, IUpdateIngredi
   { dispatch, getState, rejectWithValue }
 ) => {
   return await new Promise((resolve, reject) => {
-    client.put(`${env.REACT_APP_API_URL}/v1/ingredient/${ingredient?.id}`, ingredient)
+    client.put(`${env.REACT_APP_API_URL}/api/v1/ingredient/${ingredient?.id}`, ingredient)
       .then((resp) => {
         const { listIngredients } = getState().ingredient
         const newListIngredients = [...listIngredients]
@@ -97,7 +97,7 @@ export const createIngredient = createAsyncThunk<IBaseIngredient, IBaseIngredien
   { dispatch, getState, rejectWithValue }
 ) => {
   return await new Promise((resolve, reject) => {
-    client.post(`${env.REACT_APP_API_URL}/v1/ingredient`, ingredient)
+    client.post(`${env.REACT_APP_API_URL}/api/v1/ingredient`, ingredient)
       .then((resp) => {
         const { listIngredients } = getState().ingredient
         dispatch(setListIngredients([resp.data, ...listIngredients]))
@@ -114,7 +114,7 @@ export const deleteIngredient = createAsyncThunk<IBaseIngredient, string, { stat
   { dispatch, getState, rejectWithValue }
 ) => {
   return await new Promise((resolve, reject) => {
-    client.delete(`${env.REACT_APP_API_URL}/v1/ingredient/${id}`)
+    client.delete(`${env.REACT_APP_API_URL}/api/v1/ingredient/${id}`)
       .then((resp) => {
         const { listIngredients } = getState().ingredient
         const newListIngredients = listIngredients.filter((i) => i.id !== id)

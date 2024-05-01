@@ -8,6 +8,7 @@ import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
 import { type ICardCocktailData } from '@/features/cocktail/list/cardCocktail/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
+import { env } from '@/env'
 
 interface ListCocktailProps {
   cocktails: IPopulatedCocktail[]
@@ -32,7 +33,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
   const cocktailsList = useMemo((): ICardCocktailData[] => {
     return cocktails?.map((cocktail) => ({
       id: cocktail.id,
-      cover: `${'env.REACT_APP_SUPABASE_URL'}/storage/v1/object/public/${cocktail.picture}`,
+      cover: `${env.REACT_APP_API_URL}/public/${cocktail.picture}`,
       title: cocktail.name,
       subTitle: cocktail.steps?.map(({ ingredient }) => ingredient.name).join(', '),
       description: cocktail.description

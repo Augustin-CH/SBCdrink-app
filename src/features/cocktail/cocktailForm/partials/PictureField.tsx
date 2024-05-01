@@ -13,7 +13,7 @@ const PictureField: FC = () => {
           <CardMedia
             component="img"
             sx={{ height: 200, marginLeft: 'auto', marginRight: 'auto', width: 'auto' }}
-            image={`${env.REACT_APP_API_URL}${values.picture}`}
+            image={`${env.REACT_APP_API_URL}/public/${values.picture}`}
             alt="Live from space album cover"
           />
         </Box>
