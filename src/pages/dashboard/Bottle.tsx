@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import ManageBottles from '@/features/bottle/ManageBottles'
 import { fetchBottles } from '@/features/bottle/BottleSlice'
 import { type FC } from 'react'
+import { fetchIngredients } from '@/features/ingredient/IngredientSlice'
 
 const Bottle: FC = () => {
   const dispatch = useAppDispatch()
@@ -12,6 +13,7 @@ const Bottle: FC = () => {
 
   const fetchData = useCallback(() => {
     dispatch(fetchBottles())
+    dispatch(fetchIngredients())
   }, [dispatch])
 
   useEffect(() => {

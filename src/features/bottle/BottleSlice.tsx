@@ -5,18 +5,18 @@ import {
   type RootState
 } from '@/app/store'
 import { env } from '@/env'
-import { type IUpdateBottles, type IBaseBottle } from '@/features/bottle/types'
+import { type IUpdateBottles, type IBaseBottle, type IPopulatedBottle } from '@/features/bottle/types'
 
 const client = ApiClient.Instance()
 
 export interface BottleState {
-  listBottles: IBaseBottle[]
+  listBottles: IPopulatedBottle[]
   listBottlesStatus: FetchStatus
   error: string | null
 }
 
 const initialState: BottleState = {
-  listBottles: [] as IBaseBottle[],
+  listBottles: [] as IPopulatedBottle[],
   listBottlesStatus: 'idle',
   error: null
 }
@@ -42,21 +42,25 @@ export const bottleSlice = createSlice({
   }
 })
 
-export const fetchBottles = createAsyncThunk<IBaseBottle[], undefined, { state: RootState }>('bottle/fetchBottles', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/api/machine-configurations`)
+export const fetchBottles = createAsyncThunk<IPopulatedBottle[], undefined, { state: RootState }>('bottle/fetchBottles', async () => {
+  const resp = await client.get(`${env.REACT_APP_API_URL}/v1/machine-configurations?withIngredients=true`)
   return resp.data
 })
 
-export const updateBottles = createAsyncThunk<undefined, IUpdateBottles, { state: RootState }>('bottle/updateBottles', async ({
-  bottle
-}) => {
-  const resp = await client.put(`${env.REACT_APP_API_URL}/api/machine-configurations/${bottle?.slot}`, {
-    ingredient: bottle?.ingredientId,
-    volume: bottle?.measureVolume,
-    name: bottle?.ingredientName,
-    slot: bottle?.slot
+export const updateBottle = createAsyncThunk<IBaseBottle, IUpdateBottles, { state: RootState }>('ingredient/updateIngredients', async (
+  bottle,
+  { dispatch, rejectWithValue }
+) => {
+  return await new Promise((resolve, reject) => {
+    client.put(`${env.REACT_APP_API_URL}/v1/machine-configuration/${bottle.id}`, bottle)
+      .then((resp) => {
+        dispatch(fetchBottles())
+        resolve(resp.data)
+      })
+      .catch((e) => {
+        reject(rejectWithValue(e))
+      })
   })
-  return resp.data
 })
 
 export default bottleSlice.reducer

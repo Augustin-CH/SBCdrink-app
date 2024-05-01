@@ -1,12 +1,15 @@
 import { type UUID } from '@/app/shared/types'
+import { type IBaseIngredient } from '@/features/ingredient/types'
 
 export interface IBaseBottle {
+  id: UUID
+  ingredient: UUID | null
+  measureVolume: number | null
   slot: number
-  measureVolume: number
-  ingredientName: string
-  ingredientId: UUID
 }
 
-export interface IUpdateBottles {
-  bottle: IBaseBottle
+export interface IPopulatedBottle extends Omit<IBaseBottle, 'ingredient'> {
+  ingredient: IBaseIngredient | null
 }
+
+export interface IUpdateBottles extends IBaseBottle {}
