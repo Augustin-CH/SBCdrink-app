@@ -131,28 +131,35 @@ const CocktailForm: FC<CocktailFormProps> = ({
           {({ values, handleChange, handleBlur }) => (
             <Form>
               <Grid container>
-                <PictureField />
                 <Grid container mb={3} pt={3}>
-                  <TextField
-                    fullWidth
-                    id="name"
-                    name="name"
-                    label="Nom"
-                    value={values.name}
-                    onChange={handleChange}
-                    multiline
-                  />
-                </Grid>
-                <Grid container mb={2}>
-                  <TextField
-                    fullWidth
-                    id="description"
-                    name="description"
-                    label="Description"
-                    value={values.description}
-                    onChange={handleChange}
-                    multiline
-                  />
+                  <Grid item xs={12} md={4} mb={{ xs: 3 }}>
+                      <PictureField />
+                  </Grid>
+                  <Grid container item xs={12} md={8} pl={{ md: 2 }} rowSpacing={3} flexDirection="column" >
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        id="name"
+                        name="name"
+                        label="Nom"
+                        value={values.name}
+                        onChange={handleChange}
+                        multiline
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        id="description"
+                        name="description"
+                        label="Description"
+                        value={values.description}
+                        onChange={handleChange}
+                        multiline
+                        rows={5.25}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 
