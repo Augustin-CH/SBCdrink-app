@@ -33,7 +33,7 @@ const ListCocktail: FC<ListCocktailProps> = ({
   const cocktailsList = useMemo((): ICardCocktailData[] => {
     return cocktails?.map((cocktail) => ({
       id: cocktail.id,
-      cover: `${env.REACT_APP_API_URL}/public/${cocktail.picture}`,
+      cover: cocktail?.picture?.path ? `${env.REACT_APP_API_URL}/public/${cocktail?.picture?.path}` : null,
       title: cocktail.name,
       subTitle: cocktail.steps?.map(({ ingredient }) => ingredient.name).join(', '),
       description: cocktail.description

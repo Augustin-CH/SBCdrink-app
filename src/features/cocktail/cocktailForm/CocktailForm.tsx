@@ -18,7 +18,7 @@ import { calculeVolumeIngredient } from '../utils'
 import GlassVolumeSlider from './partials/GlassVolumeSlider'
 import AlcoholLevel from './partials/AlcoholLevel'
 import PictureField from './partials/PictureField'
-// import PictureField from './partials/PictureField'
+import { createFile, updateFile } from '@/features/file/FileSlice'
 
 const validationSchema = yup.object({
 
@@ -65,12 +65,22 @@ const CocktailForm: FC<CocktailFormProps> = ({
     }))
     delete newRecipe.ingredients
 
-    // TODO remove for send picture
-    delete newRecipe.picture
-
     if (requestStatus === 'idle') {
       try {
         setRequestStatus('loading')
+
+        let newPicture
+        if (cocktail?.picture?.id) {
+          newPicture = await dispatch(updateFile({
+            id: cocktail?.picture?.id,
+            file: newRecipe.picture
+          })).unwrap()
+        } else {
+          newPicture = await dispatch(createFile(newRecipe.picture)).unwrap()
+        }
+
+        newRecipe.picture = newPicture.id
+
         // @ts-ignore
         await dispatch(request(newRecipe as IBaseCocktail)).unwrap()
         resetForm()
@@ -123,7 +133,8 @@ const CocktailForm: FC<CocktailFormProps> = ({
                   volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
                 })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
-            glassVolume: 50
+            glassVolume: 50,
+            picture: cocktail?.picture?.path || ''
           } as IFormCocktail}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
@@ -156,7 +167,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
                         value={values.description}
                         onChange={handleChange}
                         multiline
-                        rows={5.25}
+                        rows={5.75}
                       />
                     </Grid>
                   </Grid>

@@ -2,6 +2,7 @@ import React, { type FC } from 'react'
 import { Box, Card, Grid, Typography, CardMedia } from '@mui/material'
 import { type ICardCocktailData } from '@/features/cocktail/list/cardCocktail/types'
 import { TextNeon } from '@/features/ui/components/TextNeon/TextNeon'
+import HideImageIcon from '@mui/icons-material/HideImage'
 
 interface CardCocktailProps {
   data: ICardCocktailData
@@ -16,14 +17,23 @@ const CardCocktail: FC<CardCocktailProps> = ({ data, index, onClick }) => {
     <Grid item xs={12} sm={12} md={6} key={`card_recipe_${index}`} onClick={onClick}>
       <Card sx={{ height: 230, display: 'flex', padding: 2 }}>
         <Box>
-          <div style={{ height: 200, width: 120, marginRight: 10 }}>
-            <CardMedia
-              component="img"
-              sx={{ borderRadius: 2, height: '-webkit-fill-available' }}
-              image={cover}
-              alt="Live from space album cover"
-            />
-          </div>
+          {cover
+            ? (
+              <div style={{ height: 200, width: 120, marginRight: 10 }}>
+                <CardMedia
+                  component="img"
+                  sx={{ borderRadius: 2, height: '-webkit-fill-available' }}
+                  image={cover}
+                  alt="Live from space album cover"
+                />
+              </div>
+              )
+            : (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 200, width: 120, marginRight: 10 }}>
+                <HideImageIcon sx={{ fontSize: 60, height: 202.5 }} />
+              </div>
+              )
+          }
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography component="div" variant="h5" paddingBottom={1}>

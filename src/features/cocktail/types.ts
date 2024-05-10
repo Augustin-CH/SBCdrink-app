@@ -1,4 +1,5 @@
 import { type IBaseIngredient } from '@/features/ingredient/types'
+import { type IBaseFile } from '@features/file/types'
 
 export interface IBaseCocktail {
   id: string
@@ -19,13 +20,14 @@ export interface IBaseCocktail {
   updatedAt: string
 }
 
-export interface IPopulatedCocktail extends Omit<IBaseCocktail, 'steps'> {
+export interface IPopulatedCocktail extends Omit<IBaseCocktail, 'steps' | 'picture'> {
   steps: Array<{
     id: string
     ingredient: IBaseIngredient
     proportion: number
     orderIndex: number
   }>
+  picture: IBaseFile
 }
 
 export interface IIngredientCocktailForm extends IBaseIngredient {

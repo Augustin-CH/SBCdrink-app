@@ -72,12 +72,12 @@ export const cocktailSlice = createSlice({
 })
 
 export const fetchAvailableCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchAvailableCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/recipes?isAvailable=true&withIngredients=true`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/recipes?isAvailable=true&withIngredients=true&withPictures=true`)
   return resp.data
 })
 
 export const fetchCocktails = createAsyncThunk<IPopulatedCocktail[], undefined, { state: RootState }>('cocktail/fetchCocktails', async () => {
-  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/recipes?withIngredients=true&sort=desc`)
+  const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/recipes?withIngredients=true&sort=desc&withPictures=true`)
   return resp.data
 })
 
