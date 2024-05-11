@@ -14,6 +14,8 @@ CMD ["sleep", "infinity"]
 
 FROM build AS production
 
+RUN yarn global add serve
+
 RUN yarn build
 
 ENTRYPOINT ["node", "build/app.js"]
