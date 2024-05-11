@@ -18,4 +18,4 @@ RUN yarn global add serve
 
 RUN yarn build
 
-ENTRYPOINT ["node", "build/app.js"]
+ENTRYPOINT ["serve", "-s", "build", "-p", "3000"]
