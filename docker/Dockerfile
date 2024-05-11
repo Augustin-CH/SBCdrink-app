@@ -18,4 +18,4 @@ RUN yarn global add serve
 
 RUN yarn build
 
-ENTRYPOINT ["serve", "-s", "build", "-l", "3000", "&"]
+ENTRYPOINT ["serve", "-s", "build", "-l", "3000"]

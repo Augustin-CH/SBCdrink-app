@@ -7,7 +7,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
-      target: development
+      target: production
     restart: always
     ports:
       - 3000:3000
