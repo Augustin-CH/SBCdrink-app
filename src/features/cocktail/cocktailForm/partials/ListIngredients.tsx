@@ -34,9 +34,7 @@ const ListIngredients: FC<ListIngredientsProps> = ({
 
   const handleRemoveIngredient = useCallback((event: any) => {
     const { id } = event.currentTarget.dataset
-    console.log('id', id)
-    const newIngredients = values.ingredients.filter((ingredient) => ingredient.id !== +id)
-    console.log('newIngredients', newIngredients)
+    const newIngredients = values.ingredients.filter((ingredient) => ingredient.id !== id)
     setFieldValue('ingredients', newIngredients)
   }, [setFieldValue, values.ingredients])
 

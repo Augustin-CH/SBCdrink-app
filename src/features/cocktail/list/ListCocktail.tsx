@@ -1,17 +1,17 @@
 import React, { useCallback, useMemo } from 'react'
 import { Button, Grid } from '@mui/material'
-import { BlogPostCard } from '@/features/ui/card'
-import { type IBaseCocktail } from '@features/cocktail/types'
+import { CardCocktail } from '@/features/cocktail/list/cardCocktail/CardCocktail'
+import { type IPopulatedCocktail, type IBaseCocktail } from '@/features/cocktail/types'
 import { type FC, useState } from 'react'
-import { env } from '@/env'
 import { AddCocktail, EditCocktail, ViewCocktail } from '@/features/cocktail'
 import { setSelectedCocktail } from '@/features/cocktail/CocktailSlice'
 import { useAppDispatch } from '@/app/hooks'
-import { type ICardData } from '@/features/ui/card/types'
+import { type ICardCocktailData } from '@/features/cocktail/list/cardCocktail/types'
 import { type IBaseIngredient } from '@/features/ingredient/types'
+import { env } from '@/env'
 
 interface ListCocktailProps {
-  cocktails: IBaseCocktail[]
+  cocktails: IPopulatedCocktail[]
   ingredients?: IBaseIngredient[]
   isDashboard?: boolean
 }
@@ -30,17 +30,15 @@ const ListCocktail: FC<ListCocktailProps> = ({
     setIsOpen(!isOpen)
   }, [isOpen])
 
-  const formatCocktailList = useCallback((items: IBaseCocktail[]): ICardData[] => {
-    return items?.map((cocktail, index) => ({
+  const cocktailsList = useMemo((): ICardCocktailData[] => {
+    return cocktails?.map((cocktail) => ({
       id: cocktail.id,
-      cover: `${env.REACT_APP_API_URL}${cocktail.picture}`,
+      cover: cocktail?.picture?.path ? `${env.REACT_APP_API_URL}/public/${cocktail?.picture?.path}` : null,
       title: cocktail.name,
-      subTitle: cocktail.ingredients.map((ingredient) => ingredient.name).join(', '),
+      subTitle: cocktail.steps?.map(({ ingredient }) => ingredient.name).join(', '),
       description: cocktail.description
     }))
   }, [cocktails])
-
-  const cocktailsList = useMemo(() => formatCocktailList(cocktails), [cocktails])
 
   const renderModal = useMemo(() => {
     if (isOpen) {
@@ -92,8 +90,8 @@ const ListCocktail: FC<ListCocktailProps> = ({
           </Button>
 
           <Grid container spacing={3}>
-            {cocktailsList?.map((item: ICardData, index: number) => (
-              <BlogPostCard key={item.id} data={item} index={index} onClick={() => {
+            {cocktailsList?.map((item: ICardCocktailData, index: number) => (
+              <CardCocktail key={item.id} data={item} index={index} onClick={() => {
                 dispatch(setSelectedCocktail(cocktails[index]))
                 setModalMode('edit')
                 handleModal()

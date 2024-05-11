@@ -1,6 +1,6 @@
 import React, { useCallback, type FC } from 'react'
 import { Grid, Slider } from '@mui/material'
-import { type IFormCocktail } from '@features/cocktail/types'
+import { type IFormCocktail } from '@/features/cocktail/types'
 import { useFormikContext } from 'formik'
 import { calculeTotalVolume, textVolume } from '../../utils'
 

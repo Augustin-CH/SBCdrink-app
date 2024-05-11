@@ -28,14 +28,15 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const [requestStatus, setRequestStatus] = useState<FetchStatus>('idle')
-  const [stepCocktails, setStepCocktails] = useState<IMakeCocktail>([] as IMakeCocktail)
+  const [stepCocktails, setStepCocktails] = useState<IMakeCocktail>()
 
   const { selectedCocktail } = useAppSelector(state => state.cocktail)
 
-  const ingredientText: string[] = selectedCocktail?.ingredients?.map((item, index) => {
-    const ingredientIndex = stepCocktails.findIndex((step) => step.ingredient === item.id)
-    const quantity = stepCocktails[ingredientIndex]?.quantity.toFixed(1)
-    return `${index !== 0 ? ' ' : ''}${item?.name} (${quantity} cl)`
+  const ingredientText: string[] = selectedCocktail?.steps?.map((item, index) => {
+    if (!stepCocktails) return ''
+    const ingredientIndex = stepCocktails.steps.findIndex((step) => step.ingredient === item.ingredient.id)
+    const quantity = stepCocktails.steps[ingredientIndex]?.quantity.toFixed(1)
+    return `${index !== 0 ? ' ' : ''}${item.ingredient.name} (${quantity} cl)`
   })
 
   const onValidate = (values: any) => {
@@ -47,7 +48,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
       try {
         setRequestStatus('loading')
 
-        await dispatch(makeCocktail(stepCocktails)).unwrap()
+        stepCocktails && await dispatch(makeCocktail(stepCocktails)).unwrap()
         resetForm()
         dispatch(showNotification({
           title: 'Demande de cocktail envoyée avec succès',
@@ -55,7 +56,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
         }))
       } catch (e: AxiosError | any) {
         dispatch(showNotification({
-          title: "Une erreur est survenue lors de l'envoi de la demande de cocktail",
+          title: e.message,
           type: 'error'
         }))
       } finally {

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import ManageCocktails from '@/features/cocktail/ManageCocktails'
+import ManageCocktails from '@/features/cocktail/list/ManageCocktails'
 import { fetchCocktails } from '@/features/cocktail/CocktailSlice'
 import { type FC } from 'react'
 import { fetchIngredients } from '@/features/ingredient/IngredientSlice'

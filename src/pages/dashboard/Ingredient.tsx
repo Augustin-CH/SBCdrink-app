@@ -1,18 +1,14 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { type FC, useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import ManageBottles from '@/features/bottle/ManageBottles'
-import { fetchBottles } from '@/features/bottle/BottleSlice'
-import { type FC } from 'react'
+import ManageIngredients from '@/features/ingredient/list/ManageIngredients'
 import { fetchIngredients } from '@/features/ingredient/IngredientSlice'
 
-const Bottle: FC = () => {
+const Ingredient: FC = () => {
   const dispatch = useAppDispatch()
 
-  const { listBottles, listBottlesStatus } = useAppSelector(state => state.bottle)
   const { listIngredients, listIngredientsStatus } = useAppSelector(state => state.ingredient)
 
   const fetchData = useCallback(() => {
-    dispatch(fetchBottles())
     dispatch(fetchIngredients())
   }, [dispatch])
 
@@ -22,9 +18,7 @@ const Bottle: FC = () => {
 
   return (
     <>
-      <ManageBottles
-        bottles={listBottles}
-        listBottlesStatus={listBottlesStatus}
+      <ManageIngredients
         ingredients={listIngredients}
         listIngredientsStatus={listIngredientsStatus}
       />
@@ -32,4 +26,4 @@ const Bottle: FC = () => {
   )
 }
 
-export default Bottle
+export default Ingredient

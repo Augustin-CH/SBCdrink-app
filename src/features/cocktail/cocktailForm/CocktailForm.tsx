@@ -3,7 +3,7 @@ import { type FormikHelpers, Formik, Form } from 'formik'
 import * as yup from 'yup'
 import { Button, Grid, Modal, TextField, Typography } from '@mui/material'
 import { type FC, useState } from 'react'
-import { type IFormCocktail, type IBaseCocktail } from '@/features/cocktail/types'
+import { type IFormCocktail, type IBaseCocktail, type IPopulatedCocktail } from '@/features/cocktail/types'
 import { useAppDispatch } from '@/app/hooks'
 import { type FetchStatus } from '@/app/shared/types'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +17,8 @@ import FooterListIngredients from './partials/FooterListIngredients'
 import { calculeVolumeIngredient } from '../utils'
 import GlassVolumeSlider from './partials/GlassVolumeSlider'
 import AlcoholLevel from './partials/AlcoholLevel'
-// import PictureField from './partials/PictureField'
+import PictureField from './partials/PictureField'
+import { createFile, updateFile } from '@/features/file/FileSlice'
 
 const validationSchema = yup.object({
 
@@ -26,7 +27,7 @@ const validationSchema = yup.object({
 interface CocktailFormProps {
   mode: 'add' | 'edit'
   className?: string
-  cocktail: IBaseCocktail
+  cocktail: IPopulatedCocktail
   request: (values: any) => void
   title: string
   submitText: string
@@ -57,17 +58,29 @@ const CocktailForm: FC<CocktailFormProps> = ({
     const newRecipe: any = { ...values }
     delete newRecipe.glassVolume
     delete newRecipe.isAvailable
-    newRecipe.ingredients = newRecipe.ingredients.map((item: any) => {
-      delete item.volume
-      return item
-    })
-
-    // TODO remove for send picture
-    delete newRecipe.picture
+    newRecipe.steps = values.ingredients.map(({ orderIndex, proportion, ...ingredient }) => ({
+      orderIndex,
+      proportion,
+      ingredient: ingredient.id
+    }))
+    delete newRecipe.ingredients
 
     if (requestStatus === 'idle') {
       try {
         setRequestStatus('loading')
+
+        let newPicture
+        if (cocktail?.picture?.id) {
+          newPicture = await dispatch(updateFile({
+            id: cocktail?.picture?.id,
+            file: newRecipe.picture
+          })).unwrap()
+        } else {
+          newPicture = await dispatch(createFile(newRecipe.picture)).unwrap()
+        }
+
+        newRecipe.picture = newPicture.id
+
         // @ts-ignore
         await dispatch(request(newRecipe as IBaseCocktail)).unwrap()
         resetForm()
@@ -111,13 +124,17 @@ const CocktailForm: FC<CocktailFormProps> = ({
         <Formik
           initialValues={{
             ...cocktail,
-            ingredients: cocktail?.ingredients
-              ? [...cocktail?.ingredients].map(item => ({
-                  ...item,
-                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, item)
-                })).sort((a, b) => a.order - b.order)
+            steps: undefined,
+            ingredients: cocktail?.steps
+              ? [...cocktail?.steps].map(({ proportion, orderIndex, ingredient }) => ({
+                  ...ingredient,
+                  orderIndex,
+                  proportion,
+                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
+                })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
-            glassVolume: 50
+            glassVolume: 50,
+            picture: cocktail?.picture?.path || ''
           } as IFormCocktail}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
@@ -125,28 +142,35 @@ const CocktailForm: FC<CocktailFormProps> = ({
           {({ values, handleChange, handleBlur }) => (
             <Form>
               <Grid container>
-                {/* <PictureField /> */}
                 <Grid container mb={3} pt={3}>
-                  <TextField
-                    fullWidth
-                    id="name"
-                    name="name"
-                    label="Nom"
-                    value={values.name}
-                    onChange={handleChange}
-                    multiline
-                  />
-                </Grid>
-                <Grid container mb={2}>
-                  <TextField
-                    fullWidth
-                    id="description"
-                    name="description"
-                    label="Description"
-                    value={values.description}
-                    onChange={handleChange}
-                    multiline
-                  />
+                  <Grid item xs={12} md={4} mb={{ xs: 3 }}>
+                      <PictureField />
+                  </Grid>
+                  <Grid container item xs={12} md={8} pl={{ md: 2 }} rowSpacing={3} flexDirection="column" >
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        id="name"
+                        name="name"
+                        label="Nom"
+                        value={values.name}
+                        onChange={handleChange}
+                        multiline
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        id="description"
+                        name="description"
+                        label="Description"
+                        value={values.description}
+                        onChange={handleChange}
+                        multiline
+                        rows={5.75}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
 

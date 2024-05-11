@@ -1,17 +1,14 @@
-import { type IBaseMeta } from '@/app/shared/types'
-
 export interface IBaseIngredient {
-  id: number
-  proportion: number
-  order: number
+  id: string
   name: string
   isAlcohol: boolean
   alcoholDegree: number
+  updatedAt: string
+  createdAt: string
 }
-export interface IFetchIngredients {
-  data: Array<{
-    id: number
-    attributes: Omit<IBaseIngredient, 'id'>
-  }>
-  meta: IBaseMeta
+
+export interface IUpdateIngredient extends IBaseIngredient {
+}
+
+export interface IFormIngredient extends IBaseIngredient {
 }

@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
 import { env } from '@/env'
 
-const API_URL = env.REACT_APP_API_URL
+const API_URL = `${env.REACT_APP_API_URL}/api`
 
 export const getClient = (): AxiosInstance => {
   const options: AxiosRequestConfig = {

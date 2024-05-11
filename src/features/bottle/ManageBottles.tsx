@@ -1,7 +1,7 @@
 import React, { type FC, useState, useCallback, useEffect, useMemo } from 'react'
 import { FormControl, Grid, InputLabel, List, ListItem, ListItemAvatar, MenuItem, Select } from '@mui/material'
 import { useAppDispatch } from '@/app/hooks'
-import { type IBaseBottle } from '@/features/bottle/types'
+import { type IPopulatedBottle, type IBaseBottle } from '@/features/bottle/types'
 import { useFormik } from 'formik'
 import { type UUID, type FetchStatus } from '@/app/shared/types'
 import { showNotification } from '@/features/notification/notificationSlice'
@@ -10,21 +10,23 @@ import { AxiosError } from 'axios'
 import * as yup from 'yup'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 import Loader from '@/features/ui/loader/loader'
-import { updateBottles } from './BottleSlice'
+import { updateBottle } from './BottleSlice'
 
 const validationSchema = yup.object({
   bottles: yup.array().of(
     yup.object().shape({
+      id: yup.string(),
       slot: yup.number().required(),
-      measureVolume: yup.number().required(),
-      ingredientId: yup.number().required(),
-      ingredientName: yup.string().required()
+      measureVolume: yup.number().nullable(),
+      ingredient: yup.object().shape({
+        id: yup.string().required()
+      }).nullable()
     })
   )
 })
 
 interface ManageBottlesProps {
-  bottles: IBaseBottle[]
+  bottles: IPopulatedBottle[]
   listBottlesStatus: FetchStatus
   ingredients: IBaseIngredient[]
   listIngredientsStatus: FetchStatus
@@ -43,18 +45,22 @@ const ManageBottles: FC<ManageBottlesProps> = ({
   const formik = useFormik({
     initialValues: {
       bottles
-    } as { bottles: IBaseBottle[] },
+    } as { bottles: IPopulatedBottle[] },
     validationSchema,
     onSubmit: async (values) => {
-      const value = values.bottles[indexModifiedRow as number]
+      const bottle = values.bottles[indexModifiedRow as number]
+
+      const newBottles: IBaseBottle = {
+        ...bottle,
+        ingredient: bottle?.ingredient?.id ?? null,
+        measureVolume: bottle.measureVolume === -1 ? null : bottle.measureVolume
+      }
 
       formik.validateField('bottles')
       if (requestStatus === 'idle') {
         try {
           setRequestStatus('loading')
-          await dispatch(updateBottles({
-            bottle: value
-          })).unwrap()
+          await dispatch(updateBottle(newBottles)).unwrap()
           dispatch(showNotification({
             title: 'Bouteille modifiée avec succès',
             type: 'success'
@@ -71,17 +77,13 @@ const ManageBottles: FC<ManageBottlesProps> = ({
     }
   })
 
-  const handleChangeBottle = useCallback((value: number, index: number) => {
-    const targetIngredient = ingredients.find((ingredient) => +ingredient.id === value)
+  const handleChangeBottle = useCallback((value: string | null, index: number) => {
+    const targetIngredient = ingredients.find((ingredient) => ingredient.id === value)
 
     if (targetIngredient) {
-      Promise.all([
-        formik.setFieldValue(`bottles[${index}].ingredientName`, targetIngredient.name),
-        formik.setFieldValue(`bottles[${index}].ingredientId`, targetIngredient.id)
-      ]).then(() => {
-        setIndexModifiedRow(index)
-        formik.submitForm()
-      })
+      formik.setFieldValue(`bottles[${index}].ingredient`, targetIngredient)
+      setIndexModifiedRow(index)
+      formik.submitForm()
     }
   }, [ingredients])
 
@@ -91,16 +93,16 @@ const ManageBottles: FC<ManageBottlesProps> = ({
     formik.submitForm()
   }, [])
 
-  const renderSelectIngredient = useCallback((value: UUID, index: number) => (
+  const renderSelectIngredient = useCallback((value: UUID | null, index: number) => (
     <FormControl fullWidth sx={{ margin: '5px 10px', minWidth: 150 }} >
-      <InputLabel id={`bottles[${index}].ingredientId`}>Ingredient</InputLabel>
+      <InputLabel id={`bottles[${index}].ingredient.id`}>Ingredient</InputLabel>
       <Select
-        labelId={`bottles[${index}].ingredientId`}
+        labelId={`bottles[${index}].ingredient.id`}
         id="select"
-        value={value}
-        label={`bottles[${index}].ingredientId`}
-        name={`bottles[${index}].ingredientId`}
-        onChange={(e) => handleChangeBottle(+e.target.value, index)}
+        value={value ?? ''}
+        label={`bottles[${index}].ingredient.id`}
+        name={`bottles[${index}].ingredient.id`}
+        onChange={(e) => handleChangeBottle(e.target.value, index)}
       >
         {ingredients.map((ingredient) => (
           <MenuItem key={`item_cocktail_${ingredient.id}`} value={ingredient.id}>{ingredient.name}</MenuItem>
@@ -110,24 +112,25 @@ const ManageBottles: FC<ManageBottlesProps> = ({
   ), [ingredients])
 
   const volumeList = useMemo(() => [
-    { value: 25, label: '25 cl' },
-    { value: 33, label: '33 cl' },
-    { value: 50, label: '50 cl' }
+    { value: -1, label: 'Pas de doseur' },
+    { value: 25, label: '25 ml' },
+    { value: 35, label: '35 ml' },
+    { value: 50, label: '50 ml' }
   ], [])
 
-  const renderSelectVolume = useCallback((value: number, index: number) => {
+  const renderSelectVolume = useCallback((value: number | null, index: number) => {
     return (
       <FormControl fullWidth sx={{ margin: '5px 10px', minWidth: 150 }} >
         <InputLabel id={`bottles[${index}].measureVolume`}>Volume</InputLabel>
         <Select
           labelId={`bottles[${index}].measureVolume`}
           id="select"
-          value={value}
+          value={value ?? -1}
           label={`bottles[${index}].measureVolume`}
           onChange={(e) => handleChangeVolume(+e.target.value, index)}
         >
           {volumeList.map((volume) => (
-            <MenuItem key={`item_volume_${volume.value}`} value={volume.value}>{volume.label}</MenuItem>
+            <MenuItem key={`item_volume_${volume?.value}`} value={volume.value}>{volume.label}</MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -162,13 +165,13 @@ const ManageBottles: FC<ManageBottlesProps> = ({
             // pt={5}
             >
               <List sx={{ width: '100%' }}>
-                {formik.values.bottles.map((bottle: IBaseBottle, index: number) => (
+                {formik.values.bottles.map((bottle: IPopulatedBottle, index: number) => (
                   <ListItem key={`list_bottle_${bottle.slot}`}>
                     <ListItemAvatar>
                       {bottle.slot}
                     </ListItemAvatar>
-                    {renderSelectIngredient(bottle.ingredientId, index)}
-                    {renderSelectVolume(bottle.measureVolume, index)}
+                    {renderSelectIngredient(bottle.ingredient?.id ?? null, index)}
+                    {renderSelectVolume(bottle?.measureVolume, index)}
                   </ListItem>
                 ))}
               </List>
