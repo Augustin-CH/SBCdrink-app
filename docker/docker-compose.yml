@@ -8,6 +8,7 @@ services:
       context: ../
       dockerfile: ./docker/Dockerfile
       target: production
+    # image: loic08/sbcdrink-app:main
     restart: always
     ports:
       - 3000:3000
