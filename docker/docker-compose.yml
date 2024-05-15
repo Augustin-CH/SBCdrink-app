@@ -7,7 +7,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
-      target: production
+      target: development
     # image: loic08/sbcdrink-app:main
     restart: always
     ports:
