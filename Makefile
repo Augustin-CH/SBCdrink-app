@@ -28,8 +28,8 @@ start: ## Démarre le projet
 
 .PHONY: logs
 logs: ## Affiche les logs du conteneur
-	$(DC) logs -f app
+	$(DC) logs -f sbcdrink-app
 
 .PHONY: shell
 shell: ## Lance un shell bash
-	$(EXEC) app bash
+	$(EXEC) sbcdrink-app bash

@@ -1,23 +1,25 @@
+# Étape de build
 FROM node:20 AS build
 
 WORKDIR /app
-
-COPY . /app
-
+COPY package.json yarn.lock ./
 RUN yarn install
-
-FROM build AS development
-
-RUN yarn global add nodemon
-
-CMD ["sleep", "infinity"]
-
-FROM build AS production
-
-RUN yarn global add serve
-
+COPY . .
 RUN yarn build
 
-EXPOSE 3000
+FROM node:20 AS development
 
+WORKDIR /app
+COPY . .
+COPY --from=build /app/node_modules ./node_modules
+RUN yarn global add nodemon
+EXPOSE 3000
+CMD ["nodemon", "src/index.js"]
+
+FROM node:20 AS production
+
+WORKDIR /app
+COPY --from=build /app/build ./build
+RUN yarn global add serve
+EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]
