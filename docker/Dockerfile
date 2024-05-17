@@ -14,7 +14,7 @@ COPY . .
 COPY --from=build /app/node_modules ./node_modules
 RUN yarn global add nodemon
 EXPOSE 3000
-CMD ["nodemon", "src/index.js"]
+CMD ["sleep", "infinity"]
 
 FROM node:20 AS production
 
