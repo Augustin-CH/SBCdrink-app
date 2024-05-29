@@ -19,12 +19,12 @@ down: ## Stoppe le conteneur
 	
 .PHONY: init
 init: ## Initialise le projet
-	$(EXEC) app yarn install
+	$(EXEC) sbcdrink-app yarn install
 
 .PHONY: start
 start: ## Démarre le projet
 	make up
-	$(EXEC) app yarn start
+	$(EXEC) sbcdrink-app yarn start
 
 .PHONY: logs
 logs: ## Affiche les logs du conteneur
