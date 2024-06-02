@@ -24,4 +24,4 @@ COPY ./docker/env.sh /docker-entrypoint.d/env.sh
 RUN chmod +x /docker-entrypoint.d/env.sh
 RUN yarn global add serve
 EXPOSE 3000
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["sh", "/docker-entrypoint.d/env.sh"]

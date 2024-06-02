@@ -4,9 +4,10 @@ do
     key=$(echo $i | cut -d '=' -f 1)
     value=$(echo $i | cut -d '=' -f 2-)
     echo $key=$value
-    # sed All files
-    # find /usr/share/nginx/html -type f -exec sed -i "s|${key}|${value}|g" '{}' +
+    find /app -type f -exec sed -i "s|td.${key}|'${value}'|g" '{}' +
 
     # sed JS and CSS only
-    find /app -type f \( -name '*.js' -o -name '*.css' \) -exec sed -i "s|${key}|${value}|g" '{}' +
+    # find /app -type f \( -name '*.js' -o -name '*.css' \) -exec sed -i "s|${key}|${value}|g" '{}' +
 done
+
+serve -s /app/build -l 3000
