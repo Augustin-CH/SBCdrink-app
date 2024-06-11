@@ -111,6 +111,10 @@ export const makeCocktail = createAsyncThunk<null, IMakeCocktail, { state: RootS
         throw new Error('Il y a des commandes en cours. Impossible de procéder.')
       }
 
+      if (slug === Slug.ErrIngredientIsNotAvailable) {
+        throw new Error('La commande contient des ingrédients non disponibles. Impossible de procéder.')
+      }
+
       throw new Error("Une erreur est survenue lors de l'envoi de la demande de cocktail")
     })
   return resp.data

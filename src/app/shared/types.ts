@@ -39,6 +39,10 @@ export enum Slug {
   ErrIngredientUsed = 'INGREDIENT_USED',
   ErrOrderAlreadyInStatusCreated = 'ORDER_ALREADY_IN_STATUS_CREATED',
 
+  ErrMachineConfigurationNotFound = 'MACHINE_CONFIGURATION_NOT_FOUND',
+  ErrFileNotFound = 'FILE_NOT_FOUND',
+  ErrIngredientIsNotAvailable = 'INGREDIENT_IS_NOT_AVAILABLE',
+
   ErrIncorrectInput = 'INVALID_INPUT',
 
   ErrInvalidEmail = 'INVALID_EMAIL',
