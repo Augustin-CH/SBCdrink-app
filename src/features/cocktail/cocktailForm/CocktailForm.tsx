@@ -64,6 +64,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
       ingredient: ingredient.id
     }))
     delete newRecipe.ingredients
+    newRecipe.defaultGlassVolume = values.glassVolume
 
     if (requestStatus === 'idle') {
       try {
