@@ -9,6 +9,7 @@ export interface IBaseCocktail {
   alcoholMaxLevel: number
   alcoholMinLevel: number
   picture: string
+  defaultGlassVolume: number
   steps: Array<{
     id: string
     ingredient: string

@@ -110,7 +110,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                 </Grid>
                 <Formik
                     initialValues={{
-                      glassVolume: 25,
+                      glassVolume: selectedCocktail?.defaultGlassVolume,
                       alcoholLevel: selectedCocktail?.alcoholLevel
                     }}
                     validationSchema={validationSchema}
