@@ -14,12 +14,14 @@ interface ListCocktailProps {
   cocktails: IPopulatedCocktail[]
   ingredients?: IBaseIngredient[]
   isDashboard?: boolean
+  withAddButton?: boolean
 }
 
 const ListCocktail: FC<ListCocktailProps> = ({
   cocktails,
   ingredients,
-  isDashboard
+  isDashboard,
+  withAddButton = true
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [modalMode, setModalMode] = useState('edit')
@@ -69,25 +71,27 @@ const ListCocktail: FC<ListCocktailProps> = ({
 
   return (
         <>
-          <Button
-            color="primary"
-            variant="contained"
-            sx={{
-              display: 'flex',
-              justifyContent: 'end',
-              alignItems: 'center',
-              ml: 'auto',
-              mb: 3,
-              mr: 2
-            }}
-            onClick={() => {
-              dispatch(setSelectedCocktail({} as IBaseCocktail))
-              setModalMode('add')
-              handleModal()
-            }}
-          >
-            Ajouter
-          </Button>
+          {withAddButton && (
+            <Button
+              color="primary"
+              variant="contained"
+              sx={{
+                display: 'flex',
+                justifyContent: 'end',
+                alignItems: 'center',
+                ml: 'auto',
+                mb: 3,
+                mr: 2
+              }}
+              onClick={() => {
+                dispatch(setSelectedCocktail({} as IBaseCocktail))
+                setModalMode('add')
+                handleModal()
+              }}
+            >
+              Ajouter
+            </Button>
+          )}
 
           <Grid container spacing={3}>
             {cocktailsList?.map((item: ICardCocktailData, index: number) => (
