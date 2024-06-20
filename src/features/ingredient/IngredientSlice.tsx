@@ -55,17 +55,6 @@ export const ingredientSlice = createSlice({
   }
 })
 
-export const serializeIngredient = (ingredient: any): IBaseIngredient => {
-  return {
-    id: ingredient.id,
-    name: ingredient.name,
-    isAlcohol: ingredient.is_alcohol,
-    alcoholDegree: ingredient.alcohol_degree,
-    updatedAt: ingredient.updated_at,
-    createdAt: ingredient.created_at
-  }
-}
-
 export const fetchIngredients = createAsyncThunk<IBaseIngredient[], undefined, { state: RootState }>('ingredient/fetchIngredients', async () => {
   const resp = await client.get(`${env.REACT_APP_API_URL}/api/v1/ingredients?sort=desc`)
   return resp.data

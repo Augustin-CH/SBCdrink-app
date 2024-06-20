@@ -48,6 +48,7 @@ const IngredientForm: FC<IngredientFormProps> = ({
   const onSubmit = useCallback(async (values: IFormIngredient, { resetForm }: FormikHelpers<IFormIngredient>): Promise<void> => {
     const newIngredient: IFormIngredient = { ...values }
     newIngredient.isAlcohol = newIngredient.alcoholDegree > 0
+    newIngredient.viscosity = 0.5 // TODO: add viscosity in form
 
     if (requestStatus === 'idle') {
       try {

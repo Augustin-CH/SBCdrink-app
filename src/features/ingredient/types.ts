@@ -3,6 +3,7 @@ export interface IBaseIngredient {
   name: string
   isAlcohol: boolean
   alcoholDegree: number
+  viscosity: number
   updatedAt: string
   createdAt: string
 }
