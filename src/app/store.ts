@@ -5,6 +5,7 @@ import notificationReducer from '@/features/notification/notificationSlice'
 import bottleReducer from '@/features/bottle/BottleSlice'
 import ingredientReducer from '@/features/ingredient/IngredientSlice'
 import fileReducer from '@/features/file/FileSlice'
+import settingReducer from '@/features/setting/SettingSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore({
     cocktail: cocktailReducer,
     ingredient: ingredientReducer,
     notification: notificationReducer,
-    file: fileReducer
+    file: fileReducer,
+    setting: settingReducer
   },
   devTools: env.REACT_APP_ENVIRONMENT === 'development'
 })

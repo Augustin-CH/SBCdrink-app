@@ -4,7 +4,8 @@ const paths = {
     index: '/dashboard',
     bottle: '/dashboard/bottle',
     cocktail: '/dashboard/cocktail',
-    ingredient: '/dashboard/ingredient'
+    ingredient: '/dashboard/ingredient',
+    setting: '/dashboard/setting'
   }
 }
 

@@ -6,10 +6,12 @@ import paths from './paths'
 import LocalBarIcon from '@mui/icons-material/LocalBar'
 import LiquorIcon from '@mui/icons-material/Liquor'
 import WaterDropIcon from '@mui/icons-material/WaterDrop'
+import SettingsIcon from '@mui/icons-material/Settings'
 import Home from '@/pages/Home'
 import Bottle from '@/pages/dashboard/Bottle'
 import Cocktail from '@/pages/dashboard/Cocktail'
 import Ingredient from '@/pages/dashboard/Ingredient'
+import Setting from '@/pages/dashboard/Setting'
 
 export interface RouteConstants {
   element: any
@@ -57,6 +59,16 @@ export const routes: RouteConstants[] = [
           icon: <WaterDropIcon/>,
           page: 'ingredient',
           position: 3
+        }
+      },
+      {
+        path: paths.dashboard.setting,
+        element: <Setting/>,
+        sidebar: {
+          label: 'Paramètres',
+          icon: <SettingsIcon/>,
+          page: 'setting',
+          position: 4
         }
       }
     ]
