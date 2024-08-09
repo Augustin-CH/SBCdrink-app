@@ -48,7 +48,6 @@ const IngredientForm: FC<IngredientFormProps> = ({
   const onSubmit = useCallback(async (values: IFormIngredient, { resetForm }: FormikHelpers<IFormIngredient>): Promise<void> => {
     const newIngredient: IFormIngredient = { ...values }
     newIngredient.isAlcohol = newIngredient.alcoholDegree > 0
-    newIngredient.viscosity = 0.5 // TODO: add viscosity in form
 
     if (requestStatus === 'idle') {
       try {
@@ -94,14 +93,17 @@ const IngredientForm: FC<IngredientFormProps> = ({
           </Grid>
         </Grid>
         <Formik
-          initialValues={ingredient as IFormIngredient}
+          initialValues={{
+            ...ingredient,
+            viscosity: ingredient.viscosity ?? 1
+          } as IFormIngredient}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
           {({ values, errors, handleChange, handleBlur }) => (
             <Form>
               <Grid container>
-                <Grid container mb={3} pt={3}>
+                <Grid container mb={2} pt={3}>
                   <TextField
                     fullWidth
                     id="name"
@@ -127,6 +129,21 @@ const IngredientForm: FC<IngredientFormProps> = ({
                     type="number"
                     error={!!errors.alcoholDegree}
                     helperText={errors.alcoholDegree}
+                    required
+                  />
+                </Grid>
+                <Grid container mb={2}>
+                  <TextField
+                    fullWidth
+                    id="viscosity"
+                    name="viscosity"
+                    label="Viscosité"
+                    value={values.viscosity}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    type="number"
+                    error={!!errors.viscosity}
+                    helperText={errors.viscosity}
                     required
                   />
                 </Grid>
