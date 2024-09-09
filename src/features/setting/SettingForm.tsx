@@ -11,7 +11,8 @@ import { showNotification } from '@/features/notification/notificationSlice'
 import { AxiosError } from 'axios'
 
 const validationSchema = yup.object({
-  timeForOneQuantity: yup.number().required('Le temps pour un centilitre est requis')
+  dispenserEmptyingTime: yup.number().required("Le temps pour vider un centilitre d'un doseur est requis"),
+  dispenserFillingTime: yup.number().required("Le temps pour remplire un centilitre d'un doseur est requis")
 })
 
 interface SettingFormProps {
@@ -60,19 +61,34 @@ const SettingForm: FC<SettingFormProps> = ({
     >
       {({ values, errors, handleChange, handleBlur }) => (
         <Form>
-          <Grid container sx={{ mb: 2 }}>
-            <Grid container>
+          <Grid container>
+            <Grid container sx={{ mb: 2 }}>
               <TextField
                 fullWidth
-                id="timeForOneQuantity"
-                name="timeForOneQuantity"
-                label="Temps pour un centilitre"
-                value={values.timeForOneQuantity}
+                id="dispenserEmptyingTime"
+                name="dispenserEmptyingTime"
+                label="Temps pour vider un centilitre d'un doseur"
+                value={values.dispenserEmptyingTime}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 type="number"
-                error={!!errors.timeForOneQuantity}
-                helperText={errors.timeForOneQuantity}
+                error={!!errors.dispenserEmptyingTime}
+                helperText={errors.dispenserEmptyingTime}
+                required
+              />
+            </Grid>
+            <Grid container sx={{ mb: 2 }}>
+              <TextField
+                fullWidth
+                id="dispenserFillingTime"
+                name="dispenserFillingTime"
+                label="Temps pour remplire un centilitre d'un doseur"
+                value={values.dispenserFillingTime}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                type="number"
+                error={!!errors.dispenserFillingTime}
+                helperText={errors.dispenserFillingTime}
                 required
               />
             </Grid>

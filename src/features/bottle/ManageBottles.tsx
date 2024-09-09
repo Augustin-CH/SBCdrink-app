@@ -51,8 +51,9 @@ const ManageBottles: FC<ManageBottlesProps> = ({
       const bottle = values.bottles[indexModifiedRow as number]
 
       const newBottles: IBaseBottle = {
-        ...bottle,
-        ingredient: bottle?.ingredient?.id ?? null,
+        id: bottle.id,
+        slot: bottle.slot,
+        ingredientId: bottle?.ingredient?.id ?? null,
         measureVolume: bottle.measureVolume === -1 ? null : bottle.measureVolume
       }
 

@@ -1,5 +1,6 @@
 export interface IBaseSetting {
-  timeForOneQuantity: number
+  dispenserEmptyingTime: number
+  dispenserFillingTime: number
 }
 
 export interface IUpdateSetting extends IBaseSetting {
