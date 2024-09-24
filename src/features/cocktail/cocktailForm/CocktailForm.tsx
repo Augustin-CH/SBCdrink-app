@@ -136,7 +136,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
                 })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
             glassVolume: 50,
-            picture: cocktail?.picture?.path || ''
+            picture: cocktail?.picture?.path ?? ''
           } as IFormCocktail}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
