@@ -28,7 +28,7 @@ export interface IPopulatedCocktail extends Omit<IBaseCocktail, 'steps' | 'pictu
     proportion: number
     orderIndex: number
   }>
-  picture: IBaseFile
+  picture?: IBaseFile
 }
 
 export interface IIngredientCocktailForm extends IBaseIngredient {

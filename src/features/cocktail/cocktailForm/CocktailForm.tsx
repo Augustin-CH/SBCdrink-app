@@ -61,7 +61,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
     newRecipe.steps = values.ingredients.map(({ orderIndex, proportion, ...ingredient }) => ({
       orderIndex,
       proportion,
-      ingredient: ingredient.id
+      ingredientId: ingredient.id
     }))
     delete newRecipe.ingredients
     newRecipe.defaultGlassVolume = values.glassVolume
@@ -76,11 +76,11 @@ const CocktailForm: FC<CocktailFormProps> = ({
             id: cocktail?.picture?.id,
             file: newRecipe.picture
           })).unwrap()
-        } else {
+        } else if (newRecipe.picture) {
           newPicture = await dispatch(createFile(newRecipe.picture)).unwrap()
         }
 
-        newRecipe.picture = newPicture.id
+        newRecipe.picture = newPicture?.id ?? null
 
         // @ts-ignore
         await dispatch(request(newRecipe as IBaseCocktail)).unwrap()
@@ -91,6 +91,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
         }))
         onCloseModal()
       } catch (e: AxiosError | any) {
+        console.log(e)
         dispatch(showNotification({
           title: notificationError,
           type: 'error'
