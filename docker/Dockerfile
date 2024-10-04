@@ -16,7 +16,7 @@ RUN yarn global add nodemon
 EXPOSE 3000
 CMD ["sleep", "infinity"]
 
-FROM node:20 AS production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 COPY --from=build /app/build ./build
