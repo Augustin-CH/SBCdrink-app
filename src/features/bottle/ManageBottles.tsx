@@ -11,7 +11,6 @@ import * as yup from 'yup'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 import Loader from '@/features/ui/loader/loader'
 import { updateBottle } from './BottleSlice'
-import Input from '@assets/theme/overrides/Input'
 
 const validationSchema = yup.object({
   bottles: yup.array().of(
@@ -152,7 +151,6 @@ const ManageBottles: FC<ManageBottlesProps> = ({
 
   const renderInputPosition = useCallback((value: number | null, index: number) => {
     return (
-      // <FormControl fullWidth sx={{ margin: '5px 10px', minWidth: 150 }} >
         <TextField
           fullWidth
           sx={{ minWidth: 150 }}
@@ -163,7 +161,6 @@ const ManageBottles: FC<ManageBottlesProps> = ({
           onChange={(e) => handleChangePosition(+e.target.value, index)}
           onBlur={() => handleBlurPosition(index)}
         />
-      // </FormControl>
     )
   }, [])
 
