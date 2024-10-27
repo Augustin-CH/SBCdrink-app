@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react'
+import React, { type FC, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
 import { Form, Formik, type FormikHelpers } from 'formik'
@@ -65,7 +65,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
     }
   }
 
-  const marksPercentage = () => {
+  const marksPercentage = useMemo(() => {
     const min = selectedCocktail.alcoholMinLevel
     const max = selectedCocktail.alcoholMaxLevel
     const step = 10
@@ -85,7 +85,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
       label: textPercentage(max)
     })
     return result
-  }
+  }, [selectedCocktail.alcoholMinLevel, selectedCocktail.alcoholMaxLevel])
 
   return (
         <Modal
@@ -181,7 +181,7 @@ const ViewCocktail: FC<ViewCocktailProps> = ({
                                         orientation="vertical"
                                         getAriaValueText={textPercentage}
                                         valueLabelDisplay="auto"
-                                        marks={marksPercentage()}
+                                        marks={marksPercentage}
                                         aria-labelledby="non-linear-slider"
                                         sx={{ height: 300, width: 6, marginLeft: '44px', mb: 3 }}
                                         onChange={handleChange}

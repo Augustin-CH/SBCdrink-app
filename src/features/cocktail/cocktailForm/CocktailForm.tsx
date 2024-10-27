@@ -126,6 +126,8 @@ const CocktailForm: FC<CocktailFormProps> = ({
         <Formik
           initialValues={{
             ...cocktail,
+            alcoholMinLevel: cocktail?.alcoholMinLevel ?? 0,
+            alcoholMaxLevel: cocktail?.alcoholMaxLevel ?? 100,
             steps: undefined,
             ingredients: cocktail?.steps
               ? [...cocktail?.steps].map(({ proportion, orderIndex, ingredient }) => ({
@@ -135,7 +137,7 @@ const CocktailForm: FC<CocktailFormProps> = ({
                   volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
                 })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
-            glassVolume: 50,
+            glassVolume: cocktail?.defaultGlassVolume ?? 50,
             picture: cocktail?.picture?.path ?? ''
           } as IFormCocktail}
           validationSchema={validationSchema}

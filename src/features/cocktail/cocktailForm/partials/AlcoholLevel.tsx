@@ -1,11 +1,14 @@
 import React, { useCallback, useMemo } from 'react'
 import { type IFormCocktail } from '@/features/cocktail/types'
 import { textPercentage, textVolume } from '@/features/cocktail/utils'
-import { Grid, Slider, Typography } from '@mui/material'
+import { Grid, Slider, Tooltip, Typography } from '@mui/material'
 import { useFormikContext } from 'formik'
+import InfoIcon from '@mui/icons-material/Info'
 
 const AlcoholLevel = () => {
   const { values, setFieldValue } = useFormikContext<IFormCocktail>()
+
+  const noAlcohol = useMemo(() => values.ingredients.every((ingredient) => !ingredient.isAlcohol), [values.ingredients])
 
   const marksAlcoholLevel = useMemo(() => {
     return [
@@ -41,10 +44,19 @@ const AlcoholLevel = () => {
 
   return (
     <Grid item xs={6} textAlign="center" sx={{ ml: 2, mr: 2, mb: 5 }}>
-      <Typography variant="subtitle1" mb={3}>
-            Volume d&rsquo;alcool
+      <Typography variant="subtitle1" sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+        Volume d&rsquo;alcool
+        <Tooltip title="Le volume d&rsquo;alcool est le pourcentage de l&rsquo;alcool dans le verre, vous pouvez ajuster le pourcentage minimum et maximum pour que les consomateurs puissent choisir le volume d&rsquo;alcool qu'il souhaite tout en gardant un cocktail buvable">
+          <InfoIcon />
+        </Tooltip>
       </Typography>
+      {noAlcohol && (
+        <Typography variant="subtitle1" mb={3}>
+          Cocktail sans alcool
+        </Typography>
+      )}
       <Slider
+        disabled={noAlcohol}
         id="glassVolume"
         name="glassVolume"
         orientation="horizontal"

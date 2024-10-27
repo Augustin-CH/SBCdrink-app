@@ -1,8 +1,9 @@
-import React, { useCallback, type FC } from 'react'
+import React, { useCallback, useEffect, useMemo, type FC } from 'react'
 import { Grid, Slider } from '@mui/material'
 import { type IFormCocktail } from '@/features/cocktail/types'
 import { useFormikContext } from 'formik'
 import { calculeTotalVolume, textVolume } from '../../utils'
+import usePrevious from '@/app/hooks/usePrevious'
 
 interface ProportionColumnProps {
   index: number
@@ -46,6 +47,16 @@ const ProportionColumn: FC<ProportionColumnProps> = ({
       setFieldValue('alcoholMaxLevel', newAlcoholLevel)
     }
   }, [values.ingredients])
+
+  const ingredientsName = useMemo(() => values.ingredients.map((ingredient) => ingredient.name).join('$%'), [values.ingredients]) // "$%" parce que c'est des caractères peu probable dans le nom d'un coctail
+
+  const previousIngredientName = usePrevious(ingredientsName)
+
+  useEffect(() => {
+    if (ingredientsName !== previousIngredientName) {
+      handleChangeVolume(values.ingredients[0].volume, 0)
+    }
+  }, [ingredientsName, previousIngredientName])
 
   return (
     <Grid container spacing={2} alignItems="center" sx={{ minWidth: 200 }}>
