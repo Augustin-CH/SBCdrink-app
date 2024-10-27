@@ -35,6 +35,7 @@ export interface IIngredientCocktailForm extends IBaseIngredient {
   orderIndex: number
   volume: number
   proportion: number
+  stepId: string
 }
 
 export interface IFormCocktail extends Omit<IBaseCocktail, 'steps'> {

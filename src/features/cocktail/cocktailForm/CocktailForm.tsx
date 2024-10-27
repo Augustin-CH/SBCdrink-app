@@ -58,7 +58,8 @@ const CocktailForm: FC<CocktailFormProps> = ({
     const newRecipe: any = { ...values }
     delete newRecipe.glassVolume
     delete newRecipe.isAvailable
-    newRecipe.steps = values.ingredients.map(({ orderIndex, proportion, ...ingredient }) => ({
+    newRecipe.steps = values.ingredients.map(({ orderIndex, proportion, stepId, ...ingredient }) => ({
+      id: stepId,
       orderIndex,
       proportion,
       ingredientId: ingredient.id
@@ -80,7 +81,8 @@ const CocktailForm: FC<CocktailFormProps> = ({
           newPicture = await dispatch(createFile(newRecipe.picture)).unwrap()
         }
 
-        newRecipe.picture = newPicture?.id ?? null
+        newRecipe.pictureId = newPicture?.id ?? null
+        delete newRecipe.picture
 
         // @ts-ignore
         await dispatch(request(newRecipe as IBaseCocktail)).unwrap()
@@ -130,11 +132,12 @@ const CocktailForm: FC<CocktailFormProps> = ({
             alcoholMaxLevel: cocktail?.alcoholMaxLevel ?? 100,
             steps: undefined,
             ingredients: cocktail?.steps
-              ? [...cocktail?.steps].map(({ proportion, orderIndex, ingredient }) => ({
+              ? [...cocktail?.steps].map(({ proportion, orderIndex, ingredient, id }) => ({
                   ...ingredient,
                   orderIndex,
                   proportion,
-                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol)
+                  volume: calculeVolumeIngredient(cocktail.alcoholLevel, 50, proportion, ingredient.isAlcohol),
+                  stepId: id
                 })).sort((a, b) => a.orderIndex - b.orderIndex)
               : [],
             glassVolume: cocktail?.defaultGlassVolume ?? 50,
