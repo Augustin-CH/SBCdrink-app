@@ -1,5 +1,5 @@
 import React, { type FC, useState, useCallback, useEffect, useMemo } from 'react'
-import { FormControl, Grid, InputLabel, List, ListItem, ListItemAvatar, MenuItem, Select } from '@mui/material'
+import { FormControl, Grid, InputLabel, List, ListItem, ListItemAvatar, MenuItem, Select, TextField } from '@mui/material'
 import { useAppDispatch } from '@/app/hooks'
 import { type IPopulatedBottle, type IBaseBottle } from '@/features/bottle/types'
 import { useFormik } from 'formik'
@@ -11,6 +11,7 @@ import * as yup from 'yup'
 import { type IBaseIngredient } from '@/features/ingredient/types'
 import Loader from '@/features/ui/loader/loader'
 import { updateBottle } from './BottleSlice'
+import Input from '@assets/theme/overrides/Input'
 
 const validationSchema = yup.object({
   bottles: yup.array().of(
@@ -54,7 +55,8 @@ const ManageBottles: FC<ManageBottlesProps> = ({
         id: bottle.id,
         slot: bottle.slot,
         ingredientId: bottle?.ingredient?.id ?? null,
-        measureVolume: bottle.measureVolume === -1 ? null : bottle.measureVolume
+        measureVolume: bottle.measureVolume === -1 ? null : bottle.measureVolume,
+        position: bottle.position
       }
 
       formik.validateField('bottles')
@@ -90,6 +92,16 @@ const ManageBottles: FC<ManageBottlesProps> = ({
 
   const handleChangeVolume = useCallback((value: number, index: number) => {
     formik.setFieldValue(`bottles[${index}].measureVolume`, value)
+    setIndexModifiedRow(index)
+    formik.submitForm()
+  }, [])
+
+  const handleChangePosition = useCallback((value: number, index: number) => {
+    formik.setFieldValue(`bottles[${index}].position`, value)
+  }, [])
+
+  const handleBlurPosition = useCallback((index: number) => {
+    console.log(index)
     setIndexModifiedRow(index)
     formik.submitForm()
   }, [])
@@ -138,6 +150,23 @@ const ManageBottles: FC<ManageBottlesProps> = ({
     )
   }, [])
 
+  const renderInputPosition = useCallback((value: number | null, index: number) => {
+    return (
+      // <FormControl fullWidth sx={{ margin: '5px 10px', minWidth: 150 }} >
+        <TextField
+          fullWidth
+          sx={{ minWidth: 150 }}
+          id={`bottles[${index}].position`}
+          name="position"
+          label="Position"
+          value={value}
+          onChange={(e) => handleChangePosition(+e.target.value, index)}
+          onBlur={() => handleBlurPosition(index)}
+        />
+      // </FormControl>
+    )
+  }, [])
+
   const renderContent = useCallback(() => {
     if (listIngredientsStatus === 'failed') {
       return (
@@ -173,6 +202,7 @@ const ManageBottles: FC<ManageBottlesProps> = ({
                     </ListItemAvatar>
                     {renderSelectIngredient(bottle.ingredient?.id ?? null, index)}
                     {renderSelectVolume(bottle?.measureVolume, index)}
+                    {renderInputPosition(bottle?.position, index)}
                   </ListItem>
                 ))}
               </List>

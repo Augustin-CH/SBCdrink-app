@@ -6,6 +6,7 @@ export interface IBaseBottle {
   ingredientId: UUID | null
   measureVolume: number | null
   slot: number
+  position: number | null
 }
 
 export interface IPopulatedBottle extends IBaseBottle {

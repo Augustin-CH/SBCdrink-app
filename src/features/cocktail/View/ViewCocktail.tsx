@@ -1,4 +1,4 @@
-import React, { type FC, useEffect, useMemo, useState } from 'react'
+import React, { type FC, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Button, Grid, Modal, Slider, TextField, Typography } from '@mui/material'
 import { Form, Formik, type FormikHelpers } from 'formik'
