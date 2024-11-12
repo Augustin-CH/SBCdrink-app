@@ -31,7 +31,7 @@ const GlassVolumeSlider = () => {
         valueLabelDisplay="auto"
         marks={marksVolume}
         sx={{ maxWidth: 400, mb: 5 }}
-        min={20}
+        min={0}
         max={50}
         onChange={handleChangeGlassVolume}
         value={values.glassVolume}
